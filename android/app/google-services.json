@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "377793358699",
+    "project_id": "woocommeerce-user-app",
+    "storage_bucket": "woocommeerce-user-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:377793358699:android:f57e58562512247dddba2e",
+        "android_client_info": {
+          "package_name": "com.sixamtech.flutter_woocommerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "377793358699-nhsgimucrcqpbq60nddv5n6iudlbadmk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sixamtech.flutter_woocommerce",
+            "certificate_hash": "7160c64eec758aa2b0387b601254a5e4b7e37127"
+          }
+        },
+        {
+          "client_id": "377793358699-donkpkmdkf3jcak0gdt0ktcn0mupiagr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkf8fg7SLQbMNV_U6t7tjf8wPsXP3qTMs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "377793358699-donkpkmdkf3jcak0gdt0ktcn0mupiagr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

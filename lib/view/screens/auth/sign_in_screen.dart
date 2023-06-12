@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_woocommerce/view/base/custom_app_bar.dart';
 import 'package:flutter_woocommerce/view/screens/auth/controller/auth_controller.dart';
@@ -12,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_woocommerce/view/screens/auth/model/signup_body.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
+import '../../../util/shared_pref.dart';
 
 List<String> genders = ['Male', 'Female', 'Other'];
 
@@ -54,6 +58,7 @@ class _SignInScreenState extends State<SignInScreen> {
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.bottom]);
+    print('PrefManagerUtils.getCountry-------${PrefManagerUtils.getCountry()}');
 
     super.initState();
     _emailController.text = Get.find<AuthController>().getUserEmail() ?? '';
@@ -89,7 +94,7 @@ class _SignInScreenState extends State<SignInScreen> {
           }
         },
         child: Scaffold(
-          backgroundColor: Color(0xff3B62FF),
+          backgroundColor: Color(0xff2761E7),
           body: Column(
             children: [
               SizedBox(height: 40),
@@ -116,6 +121,15 @@ class _SignInScreenState extends State<SignInScreen> {
                       height: 50,
                     ),
                     Spacer(),
+                    GestureDetector(
+                      onTap: () {
+                        Get.offNamed(RouteHelper.getInitialRoute());
+                      },
+                      child: Text('Skip',
+                          style: poppinsBold.copyWith(
+                              color: Colors.white,
+                              fontSize: Dimensions.fontSizeDefault)),
+                    ),
                   ],
                 ),
               ),
@@ -148,6 +162,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                   InkWell(
                                     onTap: () {
                                       setState(() {
+                                        _passwordController.clear();
+                                        _emailController.clear();
                                         isTapOnSignUp = false;
                                       });
                                       //Get.toNamed(RouteHelper.getSignInRoute());
@@ -341,18 +357,25 @@ class _SignInScreenState extends State<SignInScreen> {
                                     ),
                                   ]),
                                   SizedBox(height: 20),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(vertical: 15),
-                                    width: Get.width,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF3B62FF),
-                                      borderRadius: BorderRadius.circular(13),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Create account',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 16),
+                                  InkWell(
+                                    onTap: () {
+                                      _register(authController);
+                                    },
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 15),
+                                      width: Get.width,
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFF2761E7),
+                                        borderRadius: BorderRadius.circular(13),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'Create account',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -447,6 +470,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                     onTap: () {
                                       setState(() {
                                         isTapOnSignUp = true;
+                                        _passwordController.clear();
+                                        _emailController.clear();
                                       });
                                       //Get.toNamed(RouteHelper.getSignUpRoute());
                                     },
@@ -505,18 +530,25 @@ class _SignInScreenState extends State<SignInScreen> {
                                     ),
                                   ),
                                   SizedBox(height: 40),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(vertical: 15),
-                                    width: Get.width,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF3B62FF),
-                                      borderRadius: BorderRadius.circular(13),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Sign in',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 16),
+                                  GestureDetector(
+                                    onTap: () {
+                                      _login(authController);
+                                    },
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 15),
+                                      width: Get.width,
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFF2761E7),
+                                        borderRadius: BorderRadius.circular(13),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'Sign in',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16),
+                                        ),
                                       ),
                                     ),
                                   ),

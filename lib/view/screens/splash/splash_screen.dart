@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_woocommerce/ViewModel/country_view_model.dart';
 import 'package:flutter_woocommerce/controller/config_controller.dart';
 import 'package:flutter_woocommerce/controller/localization_controller.dart';
 import 'package:flutter_woocommerce/util/app_constants.dart';
@@ -11,7 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_woocommerce/view/screens/product/controller/product_controller.dart';
 import 'package:get/get.dart';
 
+import '../../../model/api models/res model/getCountryResponseModel.dart';
+import '../../../model/apis/api_response.dart';
 import '../../../util/dimensions.dart';
+import '../../../util/shared_pref.dart';
 import '../../base/custom_button.dart';
 import '../auth/sign_in_screen.dart';
 
@@ -27,6 +32,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   bool _navigate = true;
+  List<GetCountryResponse> response;
+  String selectedCountry = '';
   StreamSubscription<ConnectivityResult> _onConnectivityChanged;
   List language = [
     "Bahrain",
@@ -36,9 +43,11 @@ class _SplashScreenState extends State<SplashScreen> {
   ];
   int langSelect;
   bool isOpenBottomSheet = false;
+  CountryViewModel countryViewModel = Get.find();
   @override
   void initState() {
     super.initState();
+    initData();
     int _count = 0;
     _onConnectivityChanged = Connectivity()
         .onConnectivityChanged
@@ -65,7 +74,6 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       }
     });
-
     Get.find<ConfigController>().initSharedData();
     Get.find<CartController>().getCartList();
     //Get.find<ConfigController>().getTaxSettings();
@@ -74,15 +82,24 @@ class _SplashScreenState extends State<SplashScreen> {
     Get.find<LocationController>().initList();
     Get.find<ProductController>().initDynamicLinks();
     print('NotificationType: ${widget.notyType}');
-    Future.delayed(
-      Duration(seconds: 2),
-      () {
-        setState(() {
-          isOpenBottomSheet = true;
-        });
-        //selectLangBottomSheet();
-      },
-    );
+  }
+
+  initData() async {
+    await countryViewModel.getCountrySelect();
+    if (PrefManagerUtils.getCountry() == '' ||
+        PrefManagerUtils.getCountry() == null) {
+      Future.delayed(
+        Duration(seconds: 2),
+        () {
+          setState(() {
+            isOpenBottomSheet = true;
+          });
+          //selectLangBottomSheet();
+        },
+      );
+    } else {
+      _route();
+    }
   }
 
   @override
@@ -196,77 +213,132 @@ class _SplashScreenState extends State<SplashScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'Country',
+                              'Select country to start',
                               style: TextStyle(
                                   color: Color(0xFF322F27),
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16),
+                                  fontSize: 22),
                             ),
                             SizedBox(height: 20),
-                            ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: language.length,
-                              itemBuilder: (context, index) {
-                                return InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      langSelect = index;
-                                    });
+                            Container(
+                              height: Get.height / 3,
+                              child: GetBuilder<CountryViewModel>(
+                                builder: (controller) {
+                                  if (controller.countryResponse.status ==
+                                      Status.LOADING) {
+                                    return Center(
+                                      child: SizedBox(
+                                          height: 40,
+                                          width: 40,
+                                          child: CircularProgressIndicator()),
+                                    );
+                                  }
+                                  if (controller.countryResponse.status ==
+                                      Status.ERROR) {
+                                    return Text('No data Found');
+                                  }
+                                  if (controller.countryResponse.status ==
+                                      Status.COMPLETE) {
+                                    response = controller.countryResponse.data;
+                                  }
+                                  return response == null
+                                      ? Text('No data found')
+                                      : ListView.builder(
+                                          padding: EdgeInsets.zero,
+                                          shrinkWrap: true,
+                                          physics: BouncingScrollPhysics(),
+                                          itemCount: response.length,
+                                          itemBuilder: (context, index) {
+                                            if (response[index].code == 'BHD' ||
+                                                response[index].code == 'BDT' ||
+                                                response[index].code == 'SAR' ||
+                                                response[index].code == 'AED') {
+                                              return InkWell(
+                                                onTap: () {
+                                                  setState(() {
+                                                    langSelect = index;
+                                                    selectedCountry =
+                                                        response[langSelect]
+                                                            .code;
+                                                    print('index===$index');
+                                                    // print(
+                                                    //     'data of index===${jsonEncode(selectedCountry)}');
+                                                  });
 
-                                    // #212E4F
-                                  },
-                                  child: Container(
-                                    margin: EdgeInsets.symmetric(vertical: 4),
-                                    decoration: BoxDecoration(
-                                        color: langSelect == index
-                                            ? Color(0xFF212E4F)
-                                            : Colors.white,
-                                        borderRadius: BorderRadius.circular(25),
-                                        border: Border.all(
-                                            color: Color(0xFFE4E4E4))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 12, horizontal: 22),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            language[index],
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: langSelect == index
-                                                    ? Colors.white
-                                                    : Color(0xFF322F27)),
-                                          ),
-                                          langSelect == index
-                                              ? CircleAvatar(
-                                                  radius: 10,
-                                                  backgroundColor: Colors.green
-                                                      .withOpacity(0.8),
-                                                  child: Icon(
-                                                    Icons.check,
-                                                    size: 15,
-                                                    color: Colors.white,
+                                                  // #212E4F
+                                                },
+                                                child: Container(
+                                                  margin: EdgeInsets.symmetric(
+                                                      vertical: 4),
+                                                  decoration: BoxDecoration(
+                                                      color: langSelect == index
+                                                          ? Color(0xFF212E4F)
+                                                          : Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25),
+                                                      border: Border.all(
+                                                          color: Color(
+                                                              0xFFE4E4E4))),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        vertical: 12,
+                                                        horizontal: 22),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          response[index].name,
+                                                          style: TextStyle(
+                                                              fontSize: 16,
+                                                              color: langSelect ==
+                                                                      index
+                                                                  ? Colors.white
+                                                                  : Color(
+                                                                      0xFF322F27)),
+                                                        ),
+                                                        langSelect == index
+                                                            ? CircleAvatar(
+                                                                radius: 10,
+                                                                backgroundColor:
+                                                                    Colors.green
+                                                                        .withOpacity(
+                                                                            0.8),
+                                                                child: Icon(
+                                                                  Icons.check,
+                                                                  size: 15,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              )
+                                                            : SizedBox()
+                                                      ],
+                                                    ),
                                                   ),
-                                                )
-                                              : SizedBox()
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
+                                                ),
+                                              );
+                                            } else {
+                                              return SizedBox();
+                                            }
+                                          },
+                                        );
+                                },
+                              ),
                             ),
                             SizedBox(height: 25),
                             GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 if (langSelect == null) {
                                   Get.snackbar(
                                       'error', 'Please select language');
                                 } else {
                                   LocalizationController
                                       localizationController = Get.find();
+                                  await PrefManagerUtils.setCountry(
+                                      selectedCountry);
                                   // localizationController.setSelectIndex(langSelect + 1);
 
                                   // localizationController.setLanguage(Locale(
@@ -285,7 +357,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                 width: Get.width,
                                 decoration: BoxDecoration(
                                   // color: Color(0xFF3B62FF),
-                                  color: Color(0xFF1C61E7),
+                                  color: Color(0xFF2761E7),
                                   borderRadius: BorderRadius.circular(13),
                                 ),
                                 child: Center(
@@ -419,12 +491,13 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                   SizedBox(height: 25),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       if (langSelect == null) {
                         Get.snackbar('error', 'Please select language');
                       } else {
-                        LocalizationController localizationController =
-                            Get.find();
+                        // await PrefManagerUtils.setCountry(
+                        //     jsonEncode(selectedCountry));
+
                         // localizationController.setSelectIndex(langSelect + 1);
 
                         // localizationController.setLanguage(Locale(

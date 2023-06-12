@@ -12,7 +12,7 @@ class AppConstants {
   static const String DOKAN_ADMIN_STORE_NAME = 'WooMond Mall';
 
   // static const String BASE_URL = 'https://wp.6amtech.com/woomond1';
-  static const String BASE_URL = 'https://newness.net/';
+  static const String BASE_URL = 'https://newness.net';
   static const String CONSUMER_KEY =
       'ck_5c9b60936c9b52a04d99cb2fbe2667ae5a1ba2fb';
   static const String CUSTOMER_SECRET =

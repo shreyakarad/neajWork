@@ -16,7 +16,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:url_strategy/url_strategy.dart';
+import 'ViewModel/country_view_model.dart';
 import 'helper/di_container.dart' as di;
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
@@ -24,6 +26,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
+  await GetStorage.init();
   if (GetPlatform.isIOS || GetPlatform.isAndroid) {
     HttpOverrides.global = new MyHttpOverrides();
   }
@@ -105,6 +108,8 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+
+  CountryViewModel countryViewModel = Get.put(CountryViewModel());
 }
 
 class MyHttpOverrides extends HttpOverrides {

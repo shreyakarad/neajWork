@@ -5,6 +5,7 @@ import '../model/api models/res model/getCountryResponseModel.dart';
 class PrefManagerUtils {
   static GetStorage getStorage = GetStorage();
   static String country = 'country';
+  static String login = 'login';
 
   ///country
   static Future setCountry(String value) async {
@@ -13,5 +14,14 @@ class PrefManagerUtils {
 
   static String getCountry() {
     return getStorage.read(country) ?? '';
+  }
+
+  ///login
+  static Future setLogin(bool value) async {
+    await getStorage.write(login, value);
+  }
+
+  static bool getLogin() {
+    return getStorage.read(login) ?? false;
   }
 }

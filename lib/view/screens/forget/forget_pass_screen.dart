@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_woocommerce/helper/route_helper.dart';
 import 'package:flutter_woocommerce/util/dimensions.dart';
 import 'package:flutter_woocommerce/util/images.dart';
+import 'package:flutter_woocommerce/util/staticData.dart';
 import 'package:flutter_woocommerce/util/styles.dart';
 import 'package:flutter_woocommerce/view/base/custom_app_bar.dart';
 import 'package:flutter_woocommerce/view/base/custom_button.dart';
@@ -46,64 +48,65 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xFF2761E7),
-        // appBar: CustomAppBar(title: 'forgot_password'.tr),
-        body: pageRoute == 0
-            ? forgotPasswordUI()
-            : pageRoute == 1
-                ? verifyOtpUI(context)
-                : setPasswordUI(context),
-        // body: SafeArea(
-        //     child: Center(
-        //         child: Container(
-        //   width: context.width > 700 ? 700 : context.width,
-        //   padding: context.width > 700
-        //       ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT)
-        //       : null,
-        //   margin: EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
-        //   decoration: context.width > 700
-        //       ? BoxDecoration(
-        //           color: Theme.of(context).cardColor,
-        //           borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-        //           boxShadow: [
-        //             BoxShadow(
-        //                 color: Colors.grey[Get.isDarkMode ? 700 : 300],
-        //                 blurRadius: 5,
-        //                 spreadRadius: 1)
-        //           ],
-        //         )
-        //       : null,
-        //   child: SingleChildScrollView(
-        //     child: Column(children: [
-        //       Image.asset(Images.forgot, height: 220),
-        //       Padding(
-        //         padding: EdgeInsets.all(30),
-        //         child: Text('please_enter_email_or_username'.tr,
-        //             style: poppinsRegular, textAlign: TextAlign.center),
-        //       ),
-        //       CustomTextField(
-        //         hintText: '',
-        //         controller: _emailController,
-        //         inputType: TextInputType.text,
-        //         divider: false,
-        //       ),
-        // SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
-        // GetBuilder<AuthController>(builder: (authController) {
-        //   return !authController.isLoading
-        //       ? CustomButton(
-        //     radius: Dimensions.RADIUS_EXTRA_LARGE,
-        //     buttonText: 'next'.tr,
-        //     onPressed: () => _forgetPass(_emailController.text),
-        //   )
-        //       : Center(child: CircularProgressIndicator());
-        // }),
-        //]
-        // ),
-        //),)
-        // )
-        //
-        //
-        // ),
+        body: Container(
+          color: Color(0xFF2761E7),
+          child: pageRoute == 0
+              ? forgotPasswordUI()
+              : pageRoute == 1
+                  ? verifyOtpUI(context)
+                  : setPasswordUI(context),
+          // body: SafeArea(
+          //     child: Center(
+          //         child: Container(
+          //   width: context.width > 700 ? 700 : context.width,
+          //   padding: context.width > 700
+          //       ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT)
+          //       : null,
+          //   margin: EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
+          //   decoration: context.width > 700
+          //       ? BoxDecoration(
+          //           color: Theme.of(context).cardColor,
+          //           borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+          //           boxShadow: [
+          //             BoxShadow(
+          //                 color: Colors.grey[Get.isDarkMode ? 700 : 300],
+          //                 blurRadius: 5,
+          //                 spreadRadius: 1)
+          //           ],
+          //         )
+          //       : null,
+          //   child: SingleChildScrollView(
+          //     child: Column(children: [
+          //       Image.asset(Images.forgot, height: 220),
+          //       Padding(
+          //         padding: EdgeInsets.all(30),
+          //         child: Text('please_enter_email_or_username'.tr,
+          //             style: poppinsRegular, textAlign: TextAlign.center),
+          //       ),
+          //       CustomTextField(
+          //         hintText: '',
+          //         controller: _emailController,
+          //         inputType: TextInputType.text,
+          //         divider: false,
+          //       ),
+          // SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+          // GetBuilder<AuthController>(builder: (authController) {
+          //   return !authController.isLoading
+          //       ? CustomButton(
+          //     radius: Dimensions.RADIUS_EXTRA_LARGE,
+          //     buttonText: 'next'.tr,
+          //     onPressed: () => _forgetPass(_emailController.text),
+          //   )
+          //       : Center(child: CircularProgressIndicator());
+          // }),
+          //]
+          // ),
+          //),)
+          // )
+          //
+          //
+          // ),,
+        ),
       ),
     );
   }
@@ -146,9 +149,8 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20)),
                 color: Colors.white),
-            child: Center(
-                child: Scrollbar(
-                    child: SingleChildScrollView(
+            child: Scrollbar(
+                child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               child: Container(
                 width: context.width > 700 ? 700 : context.width,
@@ -170,6 +172,9 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
                       )
                     : null,
                 child: Column(children: [
+                  SizedBox(
+                    height: 50,
+                  ),
                   Text('Create New Password',
                       style: poppinsBold.copyWith(
                           fontSize: Dimensions.fontSizeExtraLarge,
@@ -208,41 +213,41 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
                   ),
                   SizedBox(height: 30),
                   GetBuilder<AuthController>(builder: (authBuilder) {
-                    return (!authBuilder.isLoading)
-                        ? GestureDetector(
-                            onTap: () {
-                              _resetPassword(
-                                  email, token, _newPasswordController.text);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 15),
-                              width: Get.width,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF2761E7),
-                                borderRadius: BorderRadius.circular(13),
-                              ),
-                              child: Center(
+                    return GestureDetector(
+                      onTap: () {
+                        _resetPassword(
+                            email, token, _newPasswordController.text);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                        width: Get.width,
+                        decoration: BoxDecoration(
+                          color: Color(0xFF2761E7),
+                          borderRadius: BorderRadius.circular(13),
+                        ),
+                        child: (!authBuilder.isLoading)
+                            ? Center(
                                 child: Text(
                                   'Reset Password',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 16),
                                 ),
-                              ),
-                            ),
-                          )
-                        // CustomButton(
-                        //         buttonText: 'done'.tr,
-                        //         radius: Dimensions.RADIUS_EXTRA_LARGE,
-                        //         onPressed: () => _resetPassword(
-                        //             widget.number,
-                        //             widget.resetToken,
-                        //             _newPasswordController.text),
-                        //       )
-                        : Center(child: CircularProgressIndicator());
+                              )
+                            : Center(child: StaticData.commonLoader()),
+                      ),
+                    );
+                    // CustomButton(
+                    //         buttonText: 'done'.tr,
+                    //         radius: Dimensions.RADIUS_EXTRA_LARGE,
+                    //         onPressed: () => _resetPassword(
+                    //             widget.number,
+                    //             widget.resetToken,
+                    //             _newPasswordController.text),
+                    //       )
                   }),
                 ]),
               ),
-            ))),
+            )),
           ),
         ),
       ],
@@ -285,9 +290,8 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20)),
                 color: Colors.white),
-            child: Center(
-                child: Scrollbar(
-                    child: SingleChildScrollView(
+            child: Scrollbar(
+                child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               child: Container(
                 width: context.width > 700 ? 700 : context.width,
@@ -311,100 +315,112 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
                       )
                     : null,
                 child: GetBuilder<AuthController>(builder: (authController) {
-                  return Column(children: [
-                    Text('Reset Your Password',
-                        style: poppinsBold.copyWith(
-                            fontSize: Dimensions.fontSizeExtraLarge,
-                            // decoration: TextDecoration.underline,
-                            color: Colors.black)),
-                    SizedBox(height: 50),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: RichText(
-                          text: TextSpan(children: [
-                            TextSpan(
-                                //text: 'enter_the_verification_sent_to'.tr,
-                                text:
-                                    'We just sent an email to the address you provided. Please enter the 4-digit OTP from the email below to reset your password on.',
-                                style: robotoRegular.copyWith(
-                                    color: Theme.of(context).disabledColor)),
-                            TextSpan(
-                                text: ' $email',
-                                style: robotoMedium.copyWith(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .color)),
-                          ]),
-                          textAlign: TextAlign.center),
-                    ),
+                  return Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 50),
 
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 39, vertical: 35),
-                      child: PinCodeTextField(
-                        length: 4,
-                        appContext: context,
-                        keyboardType: TextInputType.number,
-                        animationType: AnimationType.slide,
-                        pinTheme: PinTheme(
-                          shape: PinCodeFieldShape.box,
-                          fieldHeight: 60,
-                          fieldWidth: 60,
-                          borderWidth: 1,
-                          borderRadius:
-                              BorderRadius.circular(Dimensions.RADIUS_SMALL),
-                          selectedColor: Color(0xFF2761E7).withOpacity(0.2),
-                          selectedFillColor: Colors.white,
-                          inactiveFillColor:
-                              Theme.of(context).disabledColor.withOpacity(0.2),
-                          inactiveColor: Color(0xFF2761E7).withOpacity(0.2),
-                          activeColor:
-                              Theme.of(context).primaryColor.withOpacity(0.4),
-                          activeFillColor:
-                              Theme.of(context).disabledColor.withOpacity(0.2),
+                        Text('Reset Your Password',
+                            style: poppinsBold.copyWith(
+                                fontSize: Dimensions.fontSizeExtraLarge,
+                                // decoration: TextDecoration.underline,
+                                color: Colors.black)),
+                        SizedBox(height: 50),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: RichText(
+                              text: TextSpan(children: [
+                                TextSpan(
+                                    //text: 'enter_the_verification_sent_to'.tr,
+                                    text:
+                                        'We just sent an email to the address you provided. Please enter the 4-digit OTP from the email below to reset your password on.',
+                                    style: robotoRegular.copyWith(
+                                        color:
+                                            Theme.of(context).disabledColor)),
+                                TextSpan(
+                                    text: ' $email',
+                                    style: robotoMedium.copyWith(
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .color)),
+                              ]),
+                              textAlign: TextAlign.center),
                         ),
-                        animationDuration: Duration(milliseconds: 300),
-                        backgroundColor: Colors.transparent,
-                        enableActiveFill: true,
-                        onChanged: authController.updateVerificationCode,
-                        beforeTextPaste: (text) => true,
-                      ),
-                    ),
 
-                    // (widget.password != null && widget.password.isNotEmpty) ?
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Text(
-                        'did_not_receive_the_code'.tr,
-                        style: robotoRegular.copyWith(
-                            color: Theme.of(context).disabledColor),
-                      ),
-                      TextButton(
-                        onPressed: _seconds < 1
-                            ? () async {
-                                Response response =
-                                    await Get.find<AuthController>()
-                                        .forgetPassword(email);
-                                if (response.body['status'] == '200') {
-                                  _startTimer();
-                                  showCustomSnackBar(
-                                      'resend_code_successful'.tr,
-                                      isError: false);
-                                  print(response.body['otp']);
-                                  // Get.toNamed(RouteHelper.getVerificationRoute());
-                                }
-                              }
-                            : null,
-                        child: Text(
-                            '${'resend'.tr}${_seconds > 0 ? ' ($_seconds)' : ''}',
-                            style: poppinsRegular.copyWith(
-                                color: Color(0xFF2761E7))),
-                      ),
-                    ]),
-                    //: SizedBox(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 39, vertical: 35),
+                          child: PinCodeTextField(
+                            length: 4,
+                            appContext: context,
+                            keyboardType: TextInputType.number,
+                            animationType: AnimationType.none,
+                            pinTheme: PinTheme(
+                              shape: PinCodeFieldShape.box,
+                              fieldHeight: 60,
+                              fieldWidth: 60,
+                              borderWidth: 1,
+                              borderRadius: BorderRadius.circular(
+                                  Dimensions.RADIUS_SMALL),
+                              selectedColor: Color(0xFF2761E7).withOpacity(0.2),
+                              selectedFillColor: Colors.white,
+                              inactiveFillColor: Theme.of(context)
+                                  .disabledColor
+                                  .withOpacity(0.2),
+                              inactiveColor: Color(0xFF2761E7).withOpacity(0.2),
+                              activeColor: Theme.of(context)
+                                  .primaryColor
+                                  .withOpacity(0.4),
+                              activeFillColor: Theme.of(context)
+                                  .disabledColor
+                                  .withOpacity(0.2),
+                            ),
+                            // animationDuration: Duration(milliseconds: 300),
+                            backgroundColor: Colors.transparent,
+                            enableActiveFill: true,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            onChanged: authController.updateVerificationCode,
+                            beforeTextPaste: (text) => true,
+                          ),
+                        ),
 
-                    authController.verificationCode.length == 4
-                        ? !authController.isLoading
+                        // (widget.password != null && widget.password.isNotEmpty) ?
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'did_not_receive_the_code'.tr,
+                                style: robotoRegular.copyWith(
+                                    color: Theme.of(context).disabledColor),
+                              ),
+                              TextButton(
+                                onPressed: _seconds < 1
+                                    ? () async {
+                                        Response response =
+                                            await Get.find<AuthController>()
+                                                .forgetPassword(email);
+                                        if (response.body['status'] == '200') {
+                                          _startTimer();
+                                          showCustomSnackBar(
+                                              'resend_code_successful'.tr,
+                                              isError: false);
+                                          print(response.body['otp']);
+                                          // Get.toNamed(RouteHelper.getVerificationRoute());
+                                        }
+                                      }
+                                    : null,
+                                child: Text(
+                                    '${'resend'.tr}${_seconds > 0 ? ' ($_seconds)' : ''}',
+                                    style: poppinsRegular.copyWith(
+                                        color: Color(0xFF2761E7))),
+                              ),
+                            ]),
+                        //: SizedBox(),
+
+                        authController.verificationCode.length == 4
                             ? Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10.0),
@@ -420,22 +436,25 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
                                       color: Color(0xFF2761E7),
                                       borderRadius: BorderRadius.circular(13),
                                     ),
-                                    child: Center(
-                                      child: Text(
-                                        'Verify',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 16),
-                                      ),
-                                    ),
+                                    child: !authController.isLoading
+                                        ? Center(
+                                            child: Text(
+                                              'Verify',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16),
+                                            ),
+                                          )
+                                        : Center(
+                                            child: StaticData.commonLoader()),
                                   ),
                                 ),
                               )
-                            : Center(child: CircularProgressIndicator())
-                        : SizedBox.shrink(),
-                  ]);
+                            : SizedBox.shrink(),
+                      ]);
                 }),
               ),
-            ))),
+            )),
           ),
         ),
       ],
@@ -542,28 +561,28 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
                     height: 50,
                   ),
                   GetBuilder<AuthController>(builder: (authController) {
-                    return !authController.isLoading
-                        ? GestureDetector(
-                            onTap: () {
-                              _forgetPass(_emailController.text);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 15),
-                              width: Get.width,
-                              decoration: BoxDecoration(
-                                color: Color(0xFF2761E7),
-                                borderRadius: BorderRadius.circular(13),
-                              ),
-                              child: Center(
+                    return GestureDetector(
+                      onTap: () {
+                        _forgetPass(_emailController.text);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                        width: Get.width,
+                        decoration: BoxDecoration(
+                          color: Color(0xFF2761E7),
+                          borderRadius: BorderRadius.circular(13),
+                        ),
+                        child: !authController.isLoading
+                            ? Center(
                                 child: Text(
                                   'Send OTP',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 16),
                                 ),
-                              ),
-                            ),
-                          )
-                        : Center(child: CircularProgressIndicator());
+                              )
+                            : Center(child: StaticData.commonLoader()),
+                      ),
+                    );
                   }),
                   SizedBox(
                     height: 10,

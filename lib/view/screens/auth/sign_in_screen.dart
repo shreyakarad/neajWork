@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_woocommerce/util/staticData.dart';
 import 'package:flutter_woocommerce/view/base/custom_app_bar.dart';
 import 'package:flutter_woocommerce/view/screens/auth/controller/auth_controller.dart';
 import 'package:flutter_woocommerce/helper/route_helper.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_woocommerce/view/screens/auth/model/signup_body.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../util/shared_pref.dart';
 
@@ -109,15 +111,19 @@ class _SignInScreenState extends State<SignInScreen> {
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 child: Row(
                   children: [
-                    GestureDetector(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: Icon(
-                          Icons.arrow_back_ios,
-                          size: 20,
-                          color: Colors.white,
-                        )),
+                    isTapOnSignUp == true
+                        ? GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isTapOnSignUp = false;
+                              });
+                            },
+                            child: Icon(
+                              Icons.arrow_back_ios,
+                              size: 20,
+                              color: Colors.white,
+                            ))
+                        : SizedBox(),
                     Spacer(),
                     Image.asset(
                       Images.new_logo,
@@ -139,523 +145,7 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
 
               ///bottom view
-              isTapOnSignUp == true
-                  ? Expanded(
-                      child: Container(
-                        width: Get.width,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15))),
-                        child: SingleChildScrollView(
-                          physics: BouncingScrollPhysics(),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                            child: GetBuilder<AuthController>(
-                                builder: (authController) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 40),
-                                  Text('Sign Up',
-                                      style: poppinsBold.copyWith(
-                                          fontSize:
-                                              Dimensions.fontSizeOverLarge)),
-                                  SizedBox(height: 10),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        _passwordController.clear();
-                                        _emailController.clear();
-                                        isTapOnSignUp = false;
-                                      });
-                                      //Get.toNamed(RouteHelper.getSignInRoute());
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Text("Already have an account? ",
-                                            style: poppinsMedium.copyWith(
-                                                color: Color(0xff7A869A),
-                                                fontSize: Dimensions
-                                                    .fontSizeDefault)),
-                                        Text("Log In",
-                                            style: poppinsMedium.copyWith(
-                                                color: Color(0xff0041C4),
-                                                fontSize: Dimensions
-                                                    .fontSizeDefault)),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 40),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: CustomTextField(
-                                          hintText: 'First Name',
-                                          controller: _firstNameController,
-                                          focusNode: _firstNameFocus,
-                                          nextFocus: _lastNameFocus,
-                                          inputType: TextInputType.name,
-                                          capitalization:
-                                              TextCapitalization.words,
-                                          divider: false,
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Expanded(
-                                        child: CustomTextField(
-                                          hintText: 'Last Name',
-                                          controller: _lastNameController,
-                                          focusNode: _lastNameFocus,
-                                          nextFocus: _UserNameFocus,
-                                          inputType: TextInputType.name,
-                                          capitalization:
-                                              TextCapitalization.words,
-                                          divider: false,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 20),
-                                  CustomTextField(
-                                    hintText: 'User Name',
-                                    controller: _userNameController,
-                                    focusNode: _UserNameFocus,
-                                    nextFocus: _emailFocus,
-                                    inputType: TextInputType.emailAddress,
-                                    sufixIcon: Icon(Icons.person_outlined),
-                                    divider: false,
-                                  ),
-                                  SizedBox(height: 20),
-                                  CustomTextField(
-                                    hintText: 'E-mail ID',
-                                    controller: _emailController,
-                                    focusNode: _emailFocus,
-                                    nextFocus: _passwordFocus,
-                                    inputType: TextInputType.emailAddress,
-                                    sufixIcon: Icon(
-                                      Icons.email_outlined,
-                                    ),
-                                    divider: false,
-                                  ),
-                                  SizedBox(height: 20),
-                                  CustomTextField(
-                                    hintText: 'password'.tr,
-                                    controller: _passwordController,
-                                    focusNode: _passwordFocus,
-                                    inputAction: TextInputAction.done,
-                                    inputType: TextInputType.visiblePassword,
-                                    isPassword: true,
-                                    onSubmit: (text) => (GetPlatform.isWeb &&
-                                            authController.acceptTerms)
-                                        ? _register(authController)
-                                        : null,
-                                  ),
-                                  //SizedBox(height: 10),
-                                  // Row(
-                                  //   children: [
-                                  //     Expanded(
-                                  //       child: Container(
-                                  //         decoration: BoxDecoration(
-                                  //           borderRadius:
-                                  //               BorderRadius.circular(5.0),
-                                  //           border: Border.all(
-                                  //             color: Theme.of(context)
-                                  //                 .primaryColorLight
-                                  //                 .withOpacity(0.50),
-                                  //           ),
-                                  //         ),
-                                  //         child:
-                                  //             DropdownButtonFormField<String>(
-                                  //           icon:
-                                  //               Icon(Icons.keyboard_arrow_down),
-                                  //           value: selectedGender,
-                                  //           onChanged: (String newValue) {
-                                  //             setState(() {
-                                  //               selectedGender = newValue;
-                                  //             });
-                                  //           },
-                                  //           items: genders
-                                  //               .map<DropdownMenuItem<String>>(
-                                  //                   (String value) {
-                                  //             return DropdownMenuItem<String>(
-                                  //               value: value,
-                                  //               child: Text(
-                                  //                 value,
-                                  //                 style: robotoRegular.copyWith(
-                                  //                     fontSize: Dimensions
-                                  //                         .fontSizeLarge),
-                                  //               ),
-                                  //             );
-                                  //           }).toList(),
-                                  //           decoration: InputDecoration(
-                                  //             contentPadding:
-                                  //                 EdgeInsets.symmetric(
-                                  //                     horizontal: 10.0,
-                                  //                     vertical: 8.0),
-                                  //             border: InputBorder.none,
-                                  //           ),
-                                  //         ),
-                                  //       ),
-                                  //     ),
-                                  //     SizedBox(width: 10),
-                                  //     Expanded(
-                                  //       child: InkWell(
-                                  //         onTap: () {
-                                  //           _selectDate(context);
-                                  //         },
-                                  //         child: Container(
-                                  //             height: 50,
-                                  //             decoration: BoxDecoration(
-                                  //               borderRadius:
-                                  //                   BorderRadius.circular(5.0),
-                                  //               border: Border.all(
-                                  //                 color: Theme.of(context)
-                                  //                     .primaryColorLight
-                                  //                     .withOpacity(0.50),
-                                  //               ),
-                                  //             ),
-                                  //             child: Padding(
-                                  //               padding:
-                                  //                   const EdgeInsets.symmetric(
-                                  //                       horizontal: 5),
-                                  //               child: Row(
-                                  //                 mainAxisAlignment:
-                                  //                     MainAxisAlignment
-                                  //                         .spaceBetween,
-                                  //                 children: [
-                                  //                   Text(
-                                  //                     selectedDate == null
-                                  //                         ? "Birthdate"
-                                  //                         : "${DateFormat("dd MMM yyyy").format(selectedDate)}",
-                                  //                     style: robotoRegular.copyWith(
-                                  //                         fontSize: Dimensions
-                                  //                             .fontSizeLarge),
-                                  //                   ),
-                                  //                   Icon(
-                                  //                     Icons
-                                  //                         .calendar_today_outlined,
-                                  //                     size: 20,
-                                  //                   )
-                                  //                 ],
-                                  //               ),
-                                  //             )),
-                                  //       ),
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  SizedBox(
-                                      height: Dimensions.PADDING_SIZE_SMALL),
-                                  Row(children: [
-                                    SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: Checkbox(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        activeColor: Get.isDarkMode
-                                            ? Color(0xFF3B62FF)
-                                            : Color(0xFF3B62FF),
-                                        value: authController.acceptTerms,
-                                        onChanged: (bool isChecked) =>
-                                            authController.toggleTerms(),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                        width: Dimensions
-                                            .PADDING_SIZE_EXTRA_SMALL),
-                                    InkWell(
-                                        onTap: () {
-                                          authController.toggleTerms();
-                                        },
-                                        child: Text('I accept the',
-                                            style: robotoRegular.copyWith(
-                                                color: Theme.of(context)
-                                                    .primaryColor
-                                                    .withOpacity(.75)))),
-                                    InkWell(
-                                      onTap: () {
-                                        Get.toNamed(RouteHelper.getHtmlRoute(
-                                            'terms-and-condition'));
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.all(Dimensions
-                                            .PADDING_SIZE_EXTRA_SMALL),
-                                        child: Text('terms_conditions'.tr,
-                                            style: robotoMedium.copyWith(
-                                                color: Color(0xFF3B62FF))),
-                                      ),
-                                    ),
-                                  ]),
-                                  SizedBox(height: 20),
-                                  !authController.isLoading
-                                      ? InkWell(
-                                          onTap: () {
-                                            _register(authController);
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 15),
-                                            width: Get.width,
-                                            decoration: BoxDecoration(
-                                              color: Color(0xFF2761E7),
-                                              borderRadius:
-                                                  BorderRadius.circular(13),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                'Create account',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : Center(
-                                          child: CircularProgressIndicator()),
-                                  SizedBox(height: 20),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text('or',
-                                        style: poppinsBold.copyWith(
-                                            fontSize: Dimensions.fontSizeSmall,
-                                            // decoration: TextDecoration.underline,
-                                            color:
-                                                Colors.black.withOpacity(0.3))),
-                                  ),
-                                  SizedBox(height: 20),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 15),
-                                          width: Get.width,
-                                          decoration: BoxDecoration(
-                                            color: Color(0xFF4167B2),
-                                            borderRadius:
-                                                BorderRadius.circular(13),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              'Facebook',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Expanded(
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 15),
-                                          width: Get.width,
-                                          decoration: BoxDecoration(
-                                            color: Color(0xFFE95B25),
-                                            borderRadius:
-                                                BorderRadius.circular(13),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              'Google',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 20),
-                                ],
-                              );
-                            }),
-                          ),
-                        ),
-                      ),
-                    )
-                  : Expanded(
-                      child: Container(
-                        width: Get.width,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15))),
-                        child: SingleChildScrollView(
-                          physics: BouncingScrollPhysics(),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 30),
-                            child: GetBuilder<AuthController>(
-                                builder: (authController) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 40),
-                                  Text('Login',
-                                      style: poppinsBold.copyWith(
-                                          fontSize:
-                                              Dimensions.fontSizeOverLarge)),
-                                  SizedBox(height: 10),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        isTapOnSignUp = true;
-                                        _passwordController.clear();
-                                        _emailController.clear();
-                                      });
-                                      //Get.toNamed(RouteHelper.getSignUpRoute());
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Text("Don't have an account? ",
-                                            style: poppinsMedium.copyWith(
-                                                color: Color(0xff7A869A),
-                                                fontSize: Dimensions
-                                                    .fontSizeDefault)),
-                                        Text("Sign up",
-                                            style: poppinsMedium.copyWith(
-                                                color: Color(0xff0041C4),
-                                                fontSize: Dimensions
-                                                    .fontSizeDefault)),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 40),
-                                  CustomTextField(
-                                    hintText: 'E-mail ID',
-                                    controller: _emailController,
-                                    focusNode: _emailFocus,
-                                    nextFocus: _passwordFocus,
-                                    inputType: TextInputType.emailAddress,
-                                    sufixIcon: Icon(
-                                      Icons.email_outlined,
-                                    ),
-                                    divider: false,
-                                  ),
-                                  SizedBox(height: 20),
-                                  CustomTextField(
-                                    hintText: 'password'.tr,
-                                    controller: _passwordController,
-                                    focusNode: _passwordFocus,
-                                    inputAction: TextInputAction.done,
-                                    inputType: TextInputType.visiblePassword,
-                                    isPassword: true,
-                                    onSubmit: (text) => (GetPlatform.isWeb &&
-                                            authController.acceptTerms)
-                                        ? _login(authController)
-                                        : null,
-                                  ),
-                                  SizedBox(height: 10),
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: InkWell(
-                                      child: Text('${'forgot_password'.tr}?',
-                                          style: poppinsRegular.copyWith(
-                                              // decoration: TextDecoration.underline,
-                                              color: Colors.grey)),
-                                      onTap: () {
-                                        Get.toNamed(
-                                            RouteHelper.getForgotPassRoute());
-                                      },
-                                    ),
-                                  ),
-                                  SizedBox(height: 40),
-                                  !authController.isLoading
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            _login(authController);
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 15),
-                                            width: Get.width,
-                                            decoration: BoxDecoration(
-                                              color: Color(0xFF2761E7),
-                                              borderRadius:
-                                                  BorderRadius.circular(13),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                'Sign in',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : Center(
-                                          child: CircularProgressIndicator()),
-                                  SizedBox(height: 20),
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text('or',
-                                        style: poppinsBold.copyWith(
-                                            fontSize: Dimensions.fontSizeSmall,
-                                            // decoration: TextDecoration.underline,
-                                            color:
-                                                Colors.black.withOpacity(0.3))),
-                                  ),
-                                  SizedBox(height: 20),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 15),
-                                          width: Get.width,
-                                          decoration: BoxDecoration(
-                                            color: Color(0xFF4167B2),
-                                            borderRadius:
-                                                BorderRadius.circular(13),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              'Facebook',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Expanded(
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 15),
-                                          width: Get.width,
-                                          decoration: BoxDecoration(
-                                            color: Color(0xFFE95B25),
-                                            borderRadius:
-                                                BorderRadius.circular(13),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              'Google',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              );
-                            }),
-                          ),
-                        ),
-                      ),
-                    ),
+              isTapOnSignUp == true ? RegisterUI(context) : LoginUI(),
             ],
           ),
         ),
@@ -842,6 +332,496 @@ class _SignInScreenState extends State<SignInScreen> {
         //     }),
         //   ),
         // ),
+      ),
+    );
+  }
+
+  Expanded RegisterUI(BuildContext context) {
+    return Expanded(
+      child: Container(
+        width: Get.width,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: GetBuilder<AuthController>(builder: (authController) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 40),
+                  Text('Sign Up',
+                      style: poppinsBold.copyWith(
+                          fontSize: Dimensions.fontSizeOverLarge)),
+                  SizedBox(height: 10),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        _passwordController.clear();
+                        _emailController.clear();
+                        isTapOnSignUp = false;
+                      });
+                      //Get.toNamed(RouteHelper.getSignInRoute());
+                    },
+                    child: Row(
+                      children: [
+                        Text("Already have an account? ",
+                            style: poppinsMedium.copyWith(
+                                color: Color(0xff7A869A),
+                                fontSize: Dimensions.fontSizeDefault)),
+                        Text("Log In",
+                            style: poppinsMedium.copyWith(
+                                color: Color(0xff0041C4),
+                                fontSize: Dimensions.fontSizeDefault)),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 40),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextField(
+                          hintText: 'First Name',
+                          controller: _firstNameController,
+                          focusNode: _firstNameFocus,
+                          nextFocus: _lastNameFocus,
+                          inputType: TextInputType.name,
+                          capitalization: TextCapitalization.words,
+                          divider: false,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: CustomTextField(
+                          hintText: 'Last Name',
+                          controller: _lastNameController,
+                          focusNode: _lastNameFocus,
+                          nextFocus: _UserNameFocus,
+                          inputType: TextInputType.name,
+                          capitalization: TextCapitalization.words,
+                          divider: false,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  CustomTextField(
+                    hintText: 'User Name',
+                    controller: _userNameController,
+                    focusNode: _UserNameFocus,
+                    nextFocus: _emailFocus,
+                    inputType: TextInputType.emailAddress,
+                    sufixIcon: Icon(Icons.person_outlined),
+                    divider: false,
+                  ),
+                  SizedBox(height: 20),
+                  CustomTextField(
+                    hintText: 'E-mail ID',
+                    controller: _emailController,
+                    focusNode: _emailFocus,
+                    nextFocus: _passwordFocus,
+                    inputType: TextInputType.emailAddress,
+                    sufixIcon: Icon(
+                      Icons.email_outlined,
+                    ),
+                    divider: false,
+                  ),
+                  SizedBox(height: 20),
+                  CustomTextField(
+                    hintText: 'password'.tr,
+                    controller: _passwordController,
+                    focusNode: _passwordFocus,
+                    inputAction: TextInputAction.done,
+                    inputType: TextInputType.visiblePassword,
+                    isPassword: true,
+                    onSubmit: (text) =>
+                        (GetPlatform.isWeb && authController.acceptTerms)
+                            ? _register(authController)
+                            : null,
+                  ),
+                  //SizedBox(height: 10),
+                  // Row(
+                  //   children: [
+                  //     Expanded(
+                  //       child: Container(
+                  //         decoration: BoxDecoration(
+                  //           borderRadius:
+                  //               BorderRadius.circular(5.0),
+                  //           border: Border.all(
+                  //             color: Theme.of(context)
+                  //                 .primaryColorLight
+                  //                 .withOpacity(0.50),
+                  //           ),
+                  //         ),
+                  //         child:
+                  //             DropdownButtonFormField<String>(
+                  //           icon:
+                  //               Icon(Icons.keyboard_arrow_down),
+                  //           value: selectedGender,
+                  //           onChanged: (String newValue) {
+                  //             setState(() {
+                  //               selectedGender = newValue;
+                  //             });
+                  //           },
+                  //           items: genders
+                  //               .map<DropdownMenuItem<String>>(
+                  //                   (String value) {
+                  //             return DropdownMenuItem<String>(
+                  //               value: value,
+                  //               child: Text(
+                  //                 value,
+                  //                 style: robotoRegular.copyWith(
+                  //                     fontSize: Dimensions
+                  //                         .fontSizeLarge),
+                  //               ),
+                  //             );
+                  //           }).toList(),
+                  //           decoration: InputDecoration(
+                  //             contentPadding:
+                  //                 EdgeInsets.symmetric(
+                  //                     horizontal: 10.0,
+                  //                     vertical: 8.0),
+                  //             border: InputBorder.none,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     SizedBox(width: 10),
+                  //     Expanded(
+                  //       child: InkWell(
+                  //         onTap: () {
+                  //           _selectDate(context);
+                  //         },
+                  //         child: Container(
+                  //             height: 50,
+                  //             decoration: BoxDecoration(
+                  //               borderRadius:
+                  //                   BorderRadius.circular(5.0),
+                  //               border: Border.all(
+                  //                 color: Theme.of(context)
+                  //                     .primaryColorLight
+                  //                     .withOpacity(0.50),
+                  //               ),
+                  //             ),
+                  //             child: Padding(
+                  //               padding:
+                  //                   const EdgeInsets.symmetric(
+                  //                       horizontal: 5),
+                  //               child: Row(
+                  //                 mainAxisAlignment:
+                  //                     MainAxisAlignment
+                  //                         .spaceBetween,
+                  //                 children: [
+                  //                   Text(
+                  //                     selectedDate == null
+                  //                         ? "Birthdate"
+                  //                         : "${DateFormat("dd MMM yyyy").format(selectedDate)}",
+                  //                     style: robotoRegular.copyWith(
+                  //                         fontSize: Dimensions
+                  //                             .fontSizeLarge),
+                  //                   ),
+                  //                   Icon(
+                  //                     Icons
+                  //                         .calendar_today_outlined,
+                  //                     size: 20,
+                  //                   )
+                  //                 ],
+                  //               ),
+                  //             )),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                  Row(children: [
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: Checkbox(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)),
+                        activeColor: Get.isDarkMode
+                            ? Color(0xFF3B62FF)
+                            : Color(0xFF3B62FF),
+                        value: authController.acceptTerms,
+                        onChanged: (bool isChecked) =>
+                            authController.toggleTerms(),
+                      ),
+                    ),
+                    SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    InkWell(
+                        onTap: () {
+                          authController.toggleTerms();
+                        },
+                        child: Text('I accept the',
+                            style: robotoRegular.copyWith(
+                                color: Theme.of(context)
+                                    .primaryColor
+                                    .withOpacity(.75)))),
+                    InkWell(
+                      onTap: () {
+                        Get.toNamed(
+                            RouteHelper.getHtmlRoute('terms-and-condition'));
+                      },
+                      child: Padding(
+                        padding:
+                            EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                        child: Text('terms_conditions'.tr,
+                            style: robotoMedium.copyWith(
+                                color: Color(0xFF3B62FF))),
+                      ),
+                    ),
+                  ]),
+                  SizedBox(height: 20),
+                  !authController.isLoading
+                      ? InkWell(
+                          onTap: () {
+                            _register(authController);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            width: Get.width,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF2761E7),
+                              borderRadius: BorderRadius.circular(13),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Create account',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              ),
+                            ),
+                          ),
+                        )
+                      : Center(child: StaticData.commonLoader()),
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text('or',
+                        style: poppinsBold.copyWith(
+                            fontSize: Dimensions.fontSizeSmall,
+                            // decoration: TextDecoration.underline,
+                            color: Colors.black.withOpacity(0.3))),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          width: Get.width,
+                          decoration: BoxDecoration(
+                            color: Color(0xFF4167B2),
+                            borderRadius: BorderRadius.circular(13),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Facebook',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          width: Get.width,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFE95B25),
+                            borderRadius: BorderRadius.circular(13),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Google',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                ],
+              );
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Expanded LoginUI() {
+    return Expanded(
+      child: Container(
+        width: Get.width,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: GetBuilder<AuthController>(builder: (authController) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 40),
+                  Text('Login',
+                      style: poppinsBold.copyWith(
+                          fontSize: Dimensions.fontSizeOverLarge)),
+                  SizedBox(height: 10),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        isTapOnSignUp = true;
+                        _passwordController.clear();
+                        _emailController.clear();
+                      });
+                      //Get.toNamed(RouteHelper.getSignUpRoute());
+                    },
+                    child: Row(
+                      children: [
+                        Text("Don't have an account? ",
+                            style: poppinsMedium.copyWith(
+                                color: Color(0xff7A869A),
+                                fontSize: Dimensions.fontSizeDefault)),
+                        Text("Sign up",
+                            style: poppinsMedium.copyWith(
+                                color: Color(0xff0041C4),
+                                fontSize: Dimensions.fontSizeDefault)),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 40),
+                  CustomTextField(
+                    hintText: 'E-mail ID',
+                    controller: _emailController,
+                    focusNode: _emailFocus,
+                    nextFocus: _passwordFocus,
+                    inputType: TextInputType.emailAddress,
+                    sufixIcon: Icon(
+                      Icons.email_outlined,
+                    ),
+                    divider: false,
+                  ),
+                  SizedBox(height: 20),
+                  CustomTextField(
+                    hintText: 'password'.tr,
+                    controller: _passwordController,
+                    focusNode: _passwordFocus,
+                    inputAction: TextInputAction.done,
+                    inputType: TextInputType.visiblePassword,
+                    isPassword: true,
+                    onSubmit: (text) =>
+                        (GetPlatform.isWeb && authController.acceptTerms)
+                            ? _login(authController)
+                            : null,
+                  ),
+                  SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: InkWell(
+                      child: Text('${'forgot_password'.tr}?',
+                          style: poppinsRegular.copyWith(
+                              // decoration: TextDecoration.underline,
+                              color: Colors.grey)),
+                      onTap: () {
+                        Get.toNamed(RouteHelper.getForgotPassRoute());
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 40),
+                  GestureDetector(
+                    onTap: () {
+                      _login(authController);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      width: Get.width,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF2761E7),
+                        borderRadius: BorderRadius.circular(13),
+                      ),
+                      child: !authController.isLoading
+                          ? Center(
+                              child: Text(
+                                'Sign in',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              ),
+                            )
+                          : Center(child: StaticData.commonLoader()),
+                    ),
+                  ),
+
+                  //     : Center(
+                  //         child: Lottie.asset(
+                  //             'assets/image/new_loader.json',
+                  //             height: 30,
+                  //             width: 30)
+                  // ),
+                  SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text('or',
+                        style: poppinsBold.copyWith(
+                            fontSize: Dimensions.fontSizeSmall,
+                            // decoration: TextDecoration.underline,
+                            color: Colors.black.withOpacity(0.3))),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          width: Get.width,
+                          decoration: BoxDecoration(
+                            color: Color(0xFF4167B2),
+                            borderRadius: BorderRadius.circular(13),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Facebook',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          width: Get.width,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFE95B25),
+                            borderRadius: BorderRadius.circular(13),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Google',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              );
+            }),
+          ),
+        ),
       ),
     );
   }

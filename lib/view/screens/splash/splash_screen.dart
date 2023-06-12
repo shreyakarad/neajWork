@@ -5,6 +5,7 @@ import 'package:flutter_woocommerce/ViewModel/country_view_model.dart';
 import 'package:flutter_woocommerce/controller/config_controller.dart';
 import 'package:flutter_woocommerce/controller/localization_controller.dart';
 import 'package:flutter_woocommerce/util/app_constants.dart';
+import 'package:flutter_woocommerce/util/staticData.dart';
 import 'package:flutter_woocommerce/view/screens/address/controller/location_controller.dart';
 import 'package:flutter_woocommerce/view/screens/cart/controller/cart_controller.dart';
 import 'package:flutter_woocommerce/helper/route_helper.dart';
@@ -44,6 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
   int langSelect;
   bool isOpenBottomSheet = false;
   CountryViewModel countryViewModel = Get.find();
+  bool loadingForRoute = false;
   @override
   void initState() {
     super.initState();
@@ -136,11 +138,24 @@ class _SplashScreenState extends State<SplashScreen> {
                     .businessSettings
                     .maintenanceMode ==
                 1) {
+          setState(() {
+            loadingForRoute = false;
+            print('----${loadingForRoute}');
+          });
           Get.offNamed(RouteHelper.getUpdateRoute(
               AppConstants.APP_VERSION < _minimumVersion));
         } else {
+          setState(() {
+            loadingForRoute = false;
+            print('----${loadingForRoute}');
+          });
           // Get.offNamed(RouteHelper.getInitialRoute());
-          Get.offNamed(RouteHelper.getSignInRoute());
+          if (PrefManagerUtils.getLogin() == false ||
+              PrefManagerUtils.getLogin() == null) {
+            Get.offNamed(RouteHelper.getSignInRoute());
+          } else {
+            Get.offAllNamed(RouteHelper.getInitialRoute());
+          }
         }
 
         // if(widget.pendingDynamicLink != null) {
@@ -340,6 +355,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                       localizationController = Get.find();
                                   await PrefManagerUtils.setCountry(
                                       selectedCountry);
+
                                   // localizationController.setSelectIndex(langSelect + 1);
 
                                   // localizationController.setLanguage(Locale(
@@ -350,6 +366,10 @@ class _SplashScreenState extends State<SplashScreen> {
                                   //       .languages[localizationController.selectedIndex]
                                   //       .countryCode,
                                   // ));
+                                  setState(() {
+                                    loadingForRoute = true;
+                                    print('----${loadingForRoute}');
+                                  });
                                   _route();
                                 }
                               },
@@ -361,13 +381,16 @@ class _SplashScreenState extends State<SplashScreen> {
                                   color: Color(0xFF2761E7),
                                   borderRadius: BorderRadius.circular(13),
                                 ),
-                                child: Center(
-                                  child: Text(
-                                    'Start',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  ),
-                                ),
+                                child: loadingForRoute == true
+                                    ? Center(child: StaticData.commonLoader())
+                                    : Center(
+                                        child: Text(
+                                          'Start',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16),
+                                        ),
+                                      ),
                               ),
                             )
                           ],
@@ -509,6 +532,11 @@ class _SplashScreenState extends State<SplashScreen> {
                         //       .languages[localizationController.selectedIndex]
                         //       .countryCode,
                         // ));
+                        setState(() {
+                          loadingForRoute = true;
+                          print('----${loadingForRoute}');
+                        });
+
                         _route();
                       }
                     },
@@ -520,10 +548,13 @@ class _SplashScreenState extends State<SplashScreen> {
                         borderRadius: BorderRadius.circular(13),
                       ),
                       child: Center(
-                        child: Text(
-                          'Start',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
+                        child: loadingForRoute == true
+                            ? Center(child: StaticData.commonLoader())
+                            : Text(
+                                'Start',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              ),
                       ),
                     ),
                   )

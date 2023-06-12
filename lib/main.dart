@@ -31,9 +31,6 @@ Future<void> main() async {
     HttpOverrides.global = new MyHttpOverrides();
   }
 
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-      overlays: [SystemUiOverlay.bottom]);
-
   setPathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -74,15 +71,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-        statusBarColor: Color(0xFFC0BAFB),
-        statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.light));
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+    //     statusBarColor: Color(0xFFC0BAFB),
+    //     statusBarIconBrightness: Brightness.light,
+    //     statusBarBrightness: Brightness.light));
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-        statusBarColor: Color(0x50202020),
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.dark));
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+    //     // statusBarColor: Color(0x50202020),
+    //     statusBarColor: Colors.transparent,
+    //     statusBarIconBrightness: Brightness.dark,
+    //     statusBarBrightness: Brightness.dark));
 
     return GetBuilder<ThemeController>(
       builder: (themeController) {

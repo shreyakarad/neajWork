@@ -1,4 +1,5 @@
 import 'package:flutter_woocommerce/data/api/api_checker.dart';
+import 'package:flutter_woocommerce/util/shared_pref.dart';
 import 'package:flutter_woocommerce/view/screens/auth/model/signup_body.dart';
 import 'package:flutter_woocommerce/data/model/response_model.dart';
 import 'package:flutter_woocommerce/view/screens/auth/repository/auth_repo.dart';
@@ -16,7 +17,7 @@ class AuthController extends GetxController implements GetxService {
   AuthController({@required this.authRepo}) {
     _notification = authRepo.isNotificationActive();
     _biometric = authRepo.isBiometricEnabled();
-   //checkBiometricSupport();
+    //checkBiometricSupport();
   }
 
   bool _isLoading = false;
@@ -40,7 +41,8 @@ class AuthController extends GetxController implements GetxService {
       // showCustomSnackBar('registration_successful_you_have_to_login_now'.tr, isError: false);
       await login(signUpBody.email, signUpBody.password);
       //Get.toNamed(RouteHelper.getSignInRoute());
-    } else if ( response.statusCode == 400 && response.body['code'] == 'registration-error-email-exists' ) {
+    } else if (response.statusCode == 400 &&
+        response.body['code'] == 'registration-error-email-exists') {
       showCustomSnackBar('an_account_is_already'.tr);
     } else {
       responseModel = ResponseModel(false, response.statusText);
@@ -51,16 +53,19 @@ class AuthController extends GetxController implements GetxService {
     return responseModel;
   }
 
-  Future<ResponseModel> login(String username, String password, {bool fromLogin = false}) async {
+  Future<ResponseModel> login(String username, String password,
+      {bool fromLogin = false}) async {
     _isLoading = true;
     update();
-    Response response = await authRepo.login(username: username, password: password);
+    Response response =
+        await authRepo.login(username: username, password: password);
     ResponseModel responseModel;
     if (response.statusCode == 200) {
       authRepo.saveUserToken(response.body['token']);
-      responseModel = ResponseModel(true, '${response.body['is_phone_verified']}${response.body['token']}');
+      responseModel = ResponseModel(true,
+          '${response.body['is_phone_verified']}${response.body['token']}');
       await getUserId();
-      if(fromLogin) {
+      if (fromLogin) {
         if (_isActiveRememberMe) {
           saveUserEmailAndPassword(username, password);
         } else {
@@ -71,14 +76,18 @@ class AuthController extends GetxController implements GetxService {
       Get.find<WishListController>().getWishList();
       Get.find<CartController>().getCartList();
       Get.offAllNamed(RouteHelper.getInitialRoute());
+      await PrefManagerUtils.setLogin(true);
       //authenticateWithBiometric(response.body['token'], false);
-    } else if ( response.statusCode == 403  && response.body['code'] == '[jwt_auth] incorrect_password') {
+    } else if (response.statusCode == 403 &&
+        response.body['code'] == '[jwt_auth] incorrect_password') {
       showCustomSnackBar('the_password_you_entered'.tr);
-    } else if ( response.statusCode == 403  && response.body['code'] == '[jwt_auth] invalid_username') {
+    } else if (response.statusCode == 403 &&
+        response.body['code'] == '[jwt_auth] invalid_username') {
       showCustomSnackBar('the_username_is_not_registered'.tr);
-    } else if ( response.statusCode == 403  && response.body['code'] == '[jwt_auth] invalid_email') {
+    } else if (response.statusCode == 403 &&
+        response.body['code'] == '[jwt_auth] invalid_email') {
       showCustomSnackBar('unknown_email_address'.tr);
-    }else {
+    } else {
       showCustomSnackBar(response.statusText);
     }
     _isLoading = false;
@@ -89,7 +98,7 @@ class AuthController extends GetxController implements GetxService {
   Future<void> getUserId() async {
     print('--Get_User_ID--');
     Response response = await authRepo.getUserId();
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       authRepo.saveUserId(response.body['id']);
       Get.find<ProfileController>().getUserInfo();
       await updateToken(response.body['id']);
@@ -97,7 +106,7 @@ class AuthController extends GetxController implements GetxService {
     }
   }
 
- int getSavedUserId(){
+  int getSavedUserId() {
     int _savedUserId;
     _savedUserId = authRepo.getSavedUserId();
     return _savedUserId;
@@ -115,7 +124,8 @@ class AuthController extends GetxController implements GetxService {
   Future<void> deleteToken() async {
     _isLoading = true;
     update();
-    Response apiResponse = await authRepo.deleteFcmToken(getSavedUserId().toString());
+    Response apiResponse =
+        await authRepo.deleteFcmToken(getSavedUserId().toString());
     _isLoading = false;
     update();
     if (apiResponse != null && apiResponse.statusCode == 200) {
@@ -123,7 +133,6 @@ class AuthController extends GetxController implements GetxService {
       ApiChecker.checkApi(apiResponse);
     }
   }
-
 
   bool _isActiveRememberMe = false;
 
@@ -138,6 +147,7 @@ class AuthController extends GetxController implements GetxService {
     _isActiveRememberMe = !_isActiveRememberMe;
     update();
   }
+
   void setRememberMe() {
     _isActiveRememberMe = true;
   }
@@ -224,7 +234,6 @@ class AuthController extends GetxController implements GetxService {
     update();
   }
 
-
   Future<Response> forgetPassword(String email) async {
     _isLoading = true;
     update();
@@ -240,7 +249,6 @@ class AuthController extends GetxController implements GetxService {
     update();
     return response;
   }
-
 
   Future<Response> verifyEmail(String email, String otp) async {
     _isLoading = true;
@@ -259,8 +267,8 @@ class AuthController extends GetxController implements GetxService {
     return response;
   }
 
-
-  Future<Response> resetPassword(String otp, String userName, String password) async {
+  Future<Response> resetPassword(
+      String otp, String userName, String password) async {
     _isLoading = true;
     update();
     Response response = await authRepo.resetPassword(userName, otp, password);
@@ -274,8 +282,4 @@ class AuthController extends GetxController implements GetxService {
     update();
     return response;
   }
-
-
-
-
 }

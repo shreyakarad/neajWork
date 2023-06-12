@@ -61,6 +61,7 @@ dependencies:
   string_to_color: ^2.0.0
   pin_code_fields: ^7.3.0
   get_storage: ^2.1.1
+  intl_phone_field: ^3.1.0
 
 
 dependency_overrides:

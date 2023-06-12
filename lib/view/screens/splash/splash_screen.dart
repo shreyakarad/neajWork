@@ -178,14 +178,15 @@ class _SplashScreenState extends State<SplashScreen> {
                       Get.isDarkMode ? Images.new_splash : Images.new_splash))),
           child: Stack(
             children: [
-              Container(
-                height: Get.height,
-                width: Get.width,
-                decoration: BoxDecoration(
-                  color: Color(0xff20273C).withOpacity(0.8),
+              if (isOpenBottomSheet == false)
+                Container(
+                  height: Get.height,
+                  width: Get.width,
+                  decoration: BoxDecoration(
+                    color: Color(0xff20273C).withOpacity(0.8),
+                  ),
+                  child: Image.asset(Images.new_logo, color: Colors.white),
                 ),
-                child: Image.asset(Images.new_logo, color: Colors.white),
-              ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

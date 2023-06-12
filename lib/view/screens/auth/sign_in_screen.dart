@@ -31,9 +31,13 @@ class _SignInScreenState extends State<SignInScreen> {
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
   final FocusNode _firstNameFocus = FocusNode();
+  final FocusNode _lastNameFocus = FocusNode();
+  final FocusNode _UserNameFocus = FocusNode();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
 
   bool isTapOnSignUp = false;
   String selectedGender = genders.first;
@@ -184,13 +188,42 @@ class _SignInScreenState extends State<SignInScreen> {
                                     ),
                                   ),
                                   SizedBox(height: 40),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: CustomTextField(
+                                          hintText: 'First Name',
+                                          controller: _firstNameController,
+                                          focusNode: _firstNameFocus,
+                                          nextFocus: _lastNameFocus,
+                                          inputType: TextInputType.name,
+                                          capitalization:
+                                              TextCapitalization.words,
+                                          divider: false,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Expanded(
+                                        child: CustomTextField(
+                                          hintText: 'Last Name',
+                                          controller: _lastNameController,
+                                          focusNode: _lastNameFocus,
+                                          nextFocus: _UserNameFocus,
+                                          inputType: TextInputType.name,
+                                          capitalization:
+                                              TextCapitalization.words,
+                                          divider: false,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 20),
                                   CustomTextField(
-                                    hintText: 'Full Name',
-                                    controller: _firstNameController,
-                                    focusNode: _firstNameFocus,
+                                    hintText: 'User Name',
+                                    controller: _userNameController,
+                                    focusNode: _UserNameFocus,
                                     nextFocus: _emailFocus,
-                                    inputType: TextInputType.name,
-                                    capitalization: TextCapitalization.words,
+                                    inputType: TextInputType.emailAddress,
                                     sufixIcon: Icon(Icons.person_outlined),
                                     divider: false,
                                   ),
@@ -219,99 +252,99 @@ class _SignInScreenState extends State<SignInScreen> {
                                         ? _register(authController)
                                         : null,
                                   ),
-                                  SizedBox(height: 10),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5.0),
-                                            border: Border.all(
-                                              color: Theme.of(context)
-                                                  .primaryColorLight
-                                                  .withOpacity(0.50),
-                                            ),
-                                          ),
-                                          child:
-                                              DropdownButtonFormField<String>(
-                                            icon:
-                                                Icon(Icons.keyboard_arrow_down),
-                                            value: selectedGender,
-                                            onChanged: (String newValue) {
-                                              setState(() {
-                                                selectedGender = newValue;
-                                              });
-                                            },
-                                            items: genders
-                                                .map<DropdownMenuItem<String>>(
-                                                    (String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(
-                                                  value,
-                                                  style: robotoRegular.copyWith(
-                                                      fontSize: Dimensions
-                                                          .fontSizeLarge),
-                                                ),
-                                              );
-                                            }).toList(),
-                                            decoration: InputDecoration(
-                                              contentPadding:
-                                                  EdgeInsets.symmetric(
-                                                      horizontal: 10.0,
-                                                      vertical: 8.0),
-                                              border: InputBorder.none,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Expanded(
-                                        child: InkWell(
-                                          onTap: () {
-                                            _selectDate(context);
-                                          },
-                                          child: Container(
-                                              height: 50,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5.0),
-                                                border: Border.all(
-                                                  color: Theme.of(context)
-                                                      .primaryColorLight
-                                                      .withOpacity(0.50),
-                                                ),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 5),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      selectedDate == null
-                                                          ? "Birthdate"
-                                                          : "${DateFormat("dd MMM yyyy").format(selectedDate)}",
-                                                      style: robotoRegular.copyWith(
-                                                          fontSize: Dimensions
-                                                              .fontSizeLarge),
-                                                    ),
-                                                    Icon(
-                                                      Icons
-                                                          .calendar_today_outlined,
-                                                      size: 20,
-                                                    )
-                                                  ],
-                                                ),
-                                              )),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  //SizedBox(height: 10),
+                                  // Row(
+                                  //   children: [
+                                  //     Expanded(
+                                  //       child: Container(
+                                  //         decoration: BoxDecoration(
+                                  //           borderRadius:
+                                  //               BorderRadius.circular(5.0),
+                                  //           border: Border.all(
+                                  //             color: Theme.of(context)
+                                  //                 .primaryColorLight
+                                  //                 .withOpacity(0.50),
+                                  //           ),
+                                  //         ),
+                                  //         child:
+                                  //             DropdownButtonFormField<String>(
+                                  //           icon:
+                                  //               Icon(Icons.keyboard_arrow_down),
+                                  //           value: selectedGender,
+                                  //           onChanged: (String newValue) {
+                                  //             setState(() {
+                                  //               selectedGender = newValue;
+                                  //             });
+                                  //           },
+                                  //           items: genders
+                                  //               .map<DropdownMenuItem<String>>(
+                                  //                   (String value) {
+                                  //             return DropdownMenuItem<String>(
+                                  //               value: value,
+                                  //               child: Text(
+                                  //                 value,
+                                  //                 style: robotoRegular.copyWith(
+                                  //                     fontSize: Dimensions
+                                  //                         .fontSizeLarge),
+                                  //               ),
+                                  //             );
+                                  //           }).toList(),
+                                  //           decoration: InputDecoration(
+                                  //             contentPadding:
+                                  //                 EdgeInsets.symmetric(
+                                  //                     horizontal: 10.0,
+                                  //                     vertical: 8.0),
+                                  //             border: InputBorder.none,
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //     SizedBox(width: 10),
+                                  //     Expanded(
+                                  //       child: InkWell(
+                                  //         onTap: () {
+                                  //           _selectDate(context);
+                                  //         },
+                                  //         child: Container(
+                                  //             height: 50,
+                                  //             decoration: BoxDecoration(
+                                  //               borderRadius:
+                                  //                   BorderRadius.circular(5.0),
+                                  //               border: Border.all(
+                                  //                 color: Theme.of(context)
+                                  //                     .primaryColorLight
+                                  //                     .withOpacity(0.50),
+                                  //               ),
+                                  //             ),
+                                  //             child: Padding(
+                                  //               padding:
+                                  //                   const EdgeInsets.symmetric(
+                                  //                       horizontal: 5),
+                                  //               child: Row(
+                                  //                 mainAxisAlignment:
+                                  //                     MainAxisAlignment
+                                  //                         .spaceBetween,
+                                  //                 children: [
+                                  //                   Text(
+                                  //                     selectedDate == null
+                                  //                         ? "Birthdate"
+                                  //                         : "${DateFormat("dd MMM yyyy").format(selectedDate)}",
+                                  //                     style: robotoRegular.copyWith(
+                                  //                         fontSize: Dimensions
+                                  //                             .fontSizeLarge),
+                                  //                   ),
+                                  //                   Icon(
+                                  //                     Icons
+                                  //                         .calendar_today_outlined,
+                                  //                     size: 20,
+                                  //                   )
+                                  //                 ],
+                                  //               ),
+                                  //             )),
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
                                   SizedBox(
                                       height: Dimensions.PADDING_SIZE_SMALL),
                                   Row(children: [
@@ -357,28 +390,32 @@ class _SignInScreenState extends State<SignInScreen> {
                                     ),
                                   ]),
                                   SizedBox(height: 20),
-                                  InkWell(
-                                    onTap: () {
-                                      _register(authController);
-                                    },
-                                    child: Container(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 15),
-                                      width: Get.width,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFF2761E7),
-                                        borderRadius: BorderRadius.circular(13),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          'Create account',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  !authController.isLoading
+                                      ? InkWell(
+                                          onTap: () {
+                                            _register(authController);
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 15),
+                                            width: Get.width,
+                                            decoration: BoxDecoration(
+                                              color: Color(0xFF2761E7),
+                                              borderRadius:
+                                                  BorderRadius.circular(13),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                'Create account',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : Center(
+                                          child: CircularProgressIndicator()),
                                   SizedBox(height: 20),
                                   Align(
                                     alignment: Alignment.center,
@@ -530,28 +567,32 @@ class _SignInScreenState extends State<SignInScreen> {
                                     ),
                                   ),
                                   SizedBox(height: 40),
-                                  GestureDetector(
-                                    onTap: () {
-                                      _login(authController);
-                                    },
-                                    child: Container(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 15),
-                                      width: Get.width,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFF2761E7),
-                                        borderRadius: BorderRadius.circular(13),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          'Sign in',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  !authController.isLoading
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            _login(authController);
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 15),
+                                            width: Get.width,
+                                            decoration: BoxDecoration(
+                                              color: Color(0xFF2761E7),
+                                              borderRadius:
+                                                  BorderRadius.circular(13),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                'Sign in',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : Center(
+                                          child: CircularProgressIndicator()),
                                   SizedBox(height: 20),
                                   Align(
                                     alignment: Alignment.center,
@@ -825,8 +866,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
   void _register(AuthController authController) async {
     String _firstName = _firstNameController.text.trim();
-    // String _lastName = _lastNameController.text.trim();
-    // String _username = _usernameController.text.trim();
+    String _lastName = _lastNameController.text.trim();
+    String _username = _userNameController.text.trim();
     String _email = _emailController.text.trim();
     String _password = _passwordController.text.trim();
     // String _confirmPassword = _confirmPasswordController.text.trim();
@@ -835,13 +876,11 @@ class _SignInScreenState extends State<SignInScreen> {
       showCustomSnackBar('please_agree_with'.tr);
     } else if (_firstName.isEmpty) {
       showCustomSnackBar('enter_your_first_name'.tr);
-    }
-    // else if (_lastName.isEmpty) {
-    //   showCustomSnackBar('enter_your_last_name'.tr);
-    // } else if (_username.isEmpty) {
-    //   showCustomSnackBar('enter_your_username'.tr);
-    // }
-    else if (_email.isEmpty) {
+    } else if (_lastName.isEmpty) {
+      showCustomSnackBar('enter_your_last_name'.tr);
+    } else if (_username.isEmpty) {
+      showCustomSnackBar('enter_your_username'.tr);
+    } else if (_email.isEmpty) {
       showCustomSnackBar('enter_email_address'.tr);
     } else if (!GetUtils.isEmail(_email)) {
       showCustomSnackBar('enter_a_valid_email_address'.tr);
@@ -856,10 +895,10 @@ class _SignInScreenState extends State<SignInScreen> {
     else {
       authController.registration(SignUpBody(
         firstName: _firstName,
-        //lastName: _lastName,
+        lastName: _lastName,
         email: _email,
         password: _password,
-        // username: _username,
+        username: _username,
       ));
     }
   }

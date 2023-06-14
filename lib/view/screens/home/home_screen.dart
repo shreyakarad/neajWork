@@ -82,6 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<BannerController>(builder: (bannerController) {
+      print("object");
       _scrollController.addListener(() {
         _scrollOffset = _scrollController.offset;
         if (_scrollOffset > 0) {

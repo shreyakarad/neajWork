@@ -62,8 +62,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void initState() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: [SystemUiOverlay.bottom]);
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+    //     overlays: [SystemUiOverlay.bottom]);
     print('PrefManagerUtils.getCountry-------${PrefManagerUtils.getCountry()}');
 
     super.initState();
@@ -576,28 +576,30 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ]),
                   SizedBox(height: 20),
-                  !authController.isLoading
-                      ? InkWell(
-                          onTap: () {
-                            _register(authController);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 15),
-                            width: Get.width,
-                            decoration: BoxDecoration(
-                              color: Color(0xFF2761E7),
-                              borderRadius: BorderRadius.circular(13),
-                            ),
-                            child: Center(
+                  InkWell(
+                    onTap: () {
+                      authController.isLoading
+                          ? print("isLoading")
+                          : _register(authController);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      width: Get.width,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF2761E7),
+                        borderRadius: BorderRadius.circular(13),
+                      ),
+                      child: !authController.isLoading
+                          ? Center(
                               child: Text(
                                 'Create account',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 16),
                               ),
-                            ),
-                          ),
-                        )
-                      : Center(child: StaticData.commonLoader()),
+                            )
+                          : Center(child: StaticData.commonLoader()),
+                    ),
+                  ),
                   SizedBox(height: 20),
                   Align(
                     alignment: Alignment.center,
@@ -741,7 +743,9 @@ class _SignInScreenState extends State<SignInScreen> {
                   SizedBox(height: 40),
                   GestureDetector(
                     onTap: () {
-                      _login(authController);
+                      authController.isLoading
+                          ? print("IsLoading")
+                          : _login(authController);
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(vertical: 15),

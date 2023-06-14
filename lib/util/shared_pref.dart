@@ -24,4 +24,8 @@ class PrefManagerUtils {
   static bool getLogin() {
     return getStorage.read(login) ?? false;
   }
+
+  static void clearPreference() {
+    GetStorage().erase();
+  }
 }

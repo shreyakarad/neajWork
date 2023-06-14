@@ -4,6 +4,7 @@ class Images {
   static const String logo_dark = 'assets/image/logo_dark.png';
   static const String new_splash = 'assets/image/new_splash.png';
   static const String new_logo = 'assets/image/new_logo.png';
+  static const String new_logo_blue = 'assets/image/NEWNESS_LOGO_BLUE.png';
   static const String saudi = 'assets/image/saudi.png';
   static const String united_kingdom = 'assets/image/united_kingdom.png';
   static const String placeholder = 'assets/image/placeholder.png';

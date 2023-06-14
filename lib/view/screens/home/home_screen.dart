@@ -1,6 +1,9 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_woocommerce/helper/route_helper.dart';
+import 'package:flutter_woocommerce/util/color_utils.dart';
 import 'package:flutter_woocommerce/util/images.dart';
+import 'package:flutter_woocommerce/view/base/custom_image.dart';
 import 'package:flutter_woocommerce/view/base/custom_sliver.dart';
 import 'package:flutter_woocommerce/view/base/paginated_list_view.dart';
 import 'package:flutter_woocommerce/view/base/product_view.dart';
@@ -25,6 +28,15 @@ import 'package:flutter_woocommerce/view/screens/profile/controller/profile_cont
 import 'package:flutter_woocommerce/view/screens/search/search_screen.dart';
 import 'package:flutter_woocommerce/view/screens/wish/controller/wish_controller.dart';
 import 'package:get/get.dart';
+
+final List<String> imgList = [
+  'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
+  'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
+  'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
+  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
+];
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -52,16 +64,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
     HomeScreen.loadData(false);
     Get.find<BannerController>().setSafeAreaFalse();
+    Get.find<BannerController>().isScroll = false;
   }
 
   double _scrollOffset = 0.0;
   bool isSafeArea = false;
+  bool isTapOnSearch = false;
 
   Future<void> loadDataRefresh(bool reload) async {
     await Get.find<WishListController>().getWishList();
@@ -82,11 +95,59 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  final List<Widget> imageSliders = imgList
+      .map((item) => Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: Container(
+              child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  child: Stack(
+                    children: <Widget>[
+                      Image.network(
+                        item,
+                        fit: BoxFit.cover,
+                      ),
+                      Positioned(
+                        bottom: 0.0,
+                        left: 0.0,
+                        right: 0.0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color.fromARGB(200, 0, 0, 0),
+                                Color.fromARGB(0, 0, 0, 0)
+                              ],
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                            ),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 20.0),
+                          child: Text(
+                            'No. ${imgList.indexOf(item)} image',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
+            ),
+          ))
+      .toList();
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<BannerController>(builder: (bannerController) {
       _scrollController.addListener(() {
         _scrollOffset = _scrollController.offset;
+        if (_scrollOffset > 0) {
+          bannerController.isScroll = true;
+        }
         if (bannerController.bannerList.length == 0 && _scrollOffset > 61) {
           if (!bannerController.isSafeArea) {
             bannerController.setSafeAreaTrue();
@@ -111,185 +172,61 @@ class _HomeScreenState extends State<HomeScreen> {
           controller: _scrollController,
           physics: AlwaysScrollableScrollPhysics(),
           slivers: [
-            if (GetPlatform.isIOS)
-              SliverAppBar(
-                elevation: 0,
-                pinned: true,
-                toolbarHeight: 70,
-                title: Text('welcome_back'.tr,
-                    style: poppinsRegular.copyWith(
-                        fontSize: Dimensions.fontSizeSmall,
-                        color:
-                            Theme.of(context).textTheme.displayMedium.color)),
-                centerTitle: false,
-                backgroundColor: Get.isDarkMode
-                    ? Colors.black54
-                    : Theme.of(context).primaryColorLight,
-                actions: [
+            SliverAppBar(
+              pinned: true,
+              backgroundColor: Colors.white,
+              title: bannerController.isScroll == false
+                  ? Image.asset(
+                      Images.new_logo,
+                      color: Color(0xFF132784),
+                      fit: BoxFit.cover,
+                      height: 50,
+                      width: 150,
+                    )
+                  : SearchWidget(),
+              actions: [
+                if (bannerController.isScroll == false)
                   InkWell(
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
-                      child: Image.asset(Images.notification,
-                          height: 20, width: 15),
-                    ),
                     onTap: () {
-                      Get.toNamed(RouteHelper.getNotificationRoute());
+                      bannerController.isScroll = true;
                     },
-                  )
-                ],
-                flexibleSpace: Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                      Dimensions.PADDING_SIZE_DEFAULT,
-                      100,
-                      Dimensions.PADDING_SIZE_DEFAULT,
-                      0),
-                  child: GetBuilder<ProfileController>(
-                      builder: (profileController) {
-                    return Get.find<AuthController>().isLoggedIn()
-                        ? Text(
-                            profileController.profileModel != null
-                                ? ((profileController.profileModel.firstName ??
-                                        '') +
-                                    ' ' +
-                                    (profileController.profileModel.lastName ??
-                                        ''))
-                                : '',
-                            style: poppinsBold.copyWith(
-                                fontSize: Dimensions.fontSizeDefault,
-                                color: Theme.of(context).primaryColor),
-                          )
-                        : Text('guest'.tr,
-                            style: robotoMedium.copyWith(
-                                fontSize: Dimensions.fontSizeDefault));
-                  }),
-                ),
-              ),
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  Padding(
-                      padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).padding.top)),
-                  if (GetPlatform.isAndroid)
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColorLight,
-                          border: Border.all(
-                              color: Theme.of(context).primaryColorLight)),
-                      child: Padding(
-                          padding: EdgeInsets.fromLTRB(
-                              Dimensions.PADDING_SIZE_DEFAULT,
-                              Dimensions.PADDING_SIZE_SMALL,
-                              Dimensions.PADDING_SIZE_DEFAULT,
-                              0),
-                          child: Row(children: [
-                            Expanded(
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                  Text('welcome_back'.tr,
-                                      style: poppinsRegular.copyWith(
-                                          fontSize: Dimensions.fontSizeSmall,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .displayMedium
-                                              .color)),
-                                  GetBuilder<ProfileController>(
-                                      builder: (profileController) {
-                                    return Get.find<AuthController>().isLoggedIn()
-                                        ? Text(
-                                            profileController.profileModel != null
-                                                ? ((profileController
-                                                            .profileModel
-                                                            .firstName ??
-                                                        '') +
-                                                    ' ' +
-                                                    (profileController
-                                                            .profileModel
-                                                            .lastName ??
-                                                        ''))
-                                                : '',
-                                            style: poppinsBold.copyWith(
-                                                fontSize:
-                                                    Dimensions.fontSizeDefault,
-                                                color: Theme.of(context)
-                                                    .primaryColor))
-                                        : Text('guest'.tr,
-                                            style: robotoMedium.copyWith(
-                                                fontSize: Dimensions
-                                                    .fontSizeDefault));
-                                  })
-                                ])),
-                            InkWell(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal:
-                                        Dimensions.PADDING_SIZE_DEFAULT),
-                                child: Image.asset(
-                                  Images.notification,
-                                  height: 20,
-                                  width: 15,
-                                ),
-                              ),
-                              onTap: () => Get.toNamed(
-                                  RouteHelper.getNotificationRoute()),
-                            )
-                          ])),
-                    ),
-
-                  // bannerController.bannerList != null &&
-                  (bannerController.bannerList.length != 0)
-                      ? Container(
-                          height: 170,
-                          padding: EdgeInsets.fromLTRB(
-                              Dimensions.PADDING_SIZE_DEFAULT,
-                              10,
-                              Dimensions.PADDING_SIZE_DEFAULT,
-                              0),
-                          child: BannerView(),
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Theme.of(context).primaryColorLight,
-                                  Theme.of(context).primaryColorLight
-                                ],
-                              ),
-                              border: Border.all(
-                                  color: Theme.of(context).primaryColorLight)))
-                      : SizedBox(),
-                ],
-              ),
-            ),
-            bannerController.isSafeArea
-                ? SliverPersistentHeader(
-                    pinned: true,
-                    delegate: SliverDelegate(
-                      height: MediaQuery.of(context).padding.top,
-                      child: Container(
-                        color: Theme.of(context).primaryColorLight,
-                        height: MediaQuery.of(context).padding.top,
-                      ),
-                    ),
-                  )
-                : SliverPersistentHeader(
-                    pinned: true,
-                    delegate: SliverDelegate(
-                      height: 0,
-                      child: SizedBox(height: 0),
-                    ),
+                    child: Image.asset(Images.search,
+                        height: Dimensions.PADDING_SIZE_EXTRA_LARGE,
+                        width: Dimensions.PADDING_SIZE_EXTRA_LARGE),
                   ),
-            SliverPersistentHeader(
-                pinned: true,
-                delegate: SliverDelegate(
-                    height: 85,
-                    child: InkWell(
-                        onTap: () => Get.to(() => SearchScreen()),
-                        child: SearchWidget()))),
+                if (bannerController.isScroll == false) SizedBox(width: 10),
+                CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1BwYl1Svb2h_YRhj9tcnZk0yAuIHh3oBM03dzDa8f&s'),
+                ),
+                SizedBox(width: 10),
+              ],
+            ),
+            // bannerController.isSafeArea
+            //     ? SliverPersistentHeader(
+            //         pinned: true,
+            //         delegate: SliverDelegate(
+            //           height: MediaQuery.of(context).padding.top,
+            //           child: Container(
+            //             color: Theme.of(context).primaryColorLight,
+            //             height: MediaQuery.of(context).padding.top,
+            //           ),
+            //         ),
+            //       )
+            //     : SliverPersistentHeader(
+            //         pinned: true,
+            //         delegate: SliverDelegate(
+            //           height: 0,
+            //           child: SizedBox(height: 0),
+            //         ),
+            //       ),
+            // SliverPersistentHeader(
+            //     pinned: true,
+            //     delegate: SliverDelegate(
+            //         height: 85,
+            //         child: InkWell(
+            //             onTap: () => Get.to(() => SearchScreen()),
+            //             child: SearchWidget()))),
             SliverToBoxAdapter(
               child: Center(
                   child: SizedBox(
@@ -297,10 +234,30 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      (bannerController.bannerList.length != 0)
+                          ? Container(
+                              height: 170,
+                              padding: EdgeInsets.fromLTRB(
+                                  Dimensions.PADDING_SIZE_DEFAULT,
+                                  10,
+                                  Dimensions.PADDING_SIZE_DEFAULT,
+                                  0),
+                              // child: BannerView(),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: CustomImage(
+                                  image:
+                                      '${bannerController.bannerList[0].image}',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
                       CategoryView(),
-                      PopularProductView(isPopular: true),
-                      SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                      //PopularProductView(isPopular: true),
+                      //SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                       TopRatedProduct(),
+                      SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                       SaleProductView(),
                       SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                       AppConstants.vendorType != VendorType.singleVendor

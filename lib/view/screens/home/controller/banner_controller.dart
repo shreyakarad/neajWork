@@ -11,18 +11,26 @@ class BannerController extends GetxController implements GetxService {
   List<BannerModel> bannerList = [];
   bool _isSafeArea = false;
   bool get isSafeArea => _isSafeArea;
+  bool _isScroll = false;
+
+  bool get isScroll => _isScroll;
+
+  set isScroll(bool value) {
+    _isScroll = value;
+    update();
+  }
 
   Future<void> getBannerList() async {
     bannerList = [];
     Response response = await bannerRepo.getBannerList();
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       response.body.forEach((banner) {
         BannerModel _banner = BannerModel.fromJson(banner);
         if (_banner.bannerType == 'main') {
           bannerList.add(_banner);
         }
       });
-    }else{
+    } else {
       ApiChecker.checkApi(response);
     }
     update();
@@ -32,12 +40,9 @@ class BannerController extends GetxController implements GetxService {
     _isSafeArea = true;
     update();
   }
+
   void setSafeAreaFalse() {
     _isSafeArea = false;
     update();
   }
-
-
-
-
 }

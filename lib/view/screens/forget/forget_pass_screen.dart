@@ -46,67 +46,65 @@ class _ForgetPassScreenState extends State<ForgetPassScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          color: Color(0xFF2761E7),
-          child: pageRoute == 0
-              ? forgotPasswordUI()
-              : pageRoute == 1
-                  ? verifyOtpUI(context)
-                  : setPasswordUI(context),
-          // body: SafeArea(
-          //     child: Center(
-          //         child: Container(
-          //   width: context.width > 700 ? 700 : context.width,
-          //   padding: context.width > 700
-          //       ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT)
-          //       : null,
-          //   margin: EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
-          //   decoration: context.width > 700
-          //       ? BoxDecoration(
-          //           color: Theme.of(context).cardColor,
-          //           borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
-          //           boxShadow: [
-          //             BoxShadow(
-          //                 color: Colors.grey[Get.isDarkMode ? 700 : 300],
-          //                 blurRadius: 5,
-          //                 spreadRadius: 1)
-          //           ],
-          //         )
-          //       : null,
-          //   child: SingleChildScrollView(
-          //     child: Column(children: [
-          //       Image.asset(Images.forgot, height: 220),
-          //       Padding(
-          //         padding: EdgeInsets.all(30),
-          //         child: Text('please_enter_email_or_username'.tr,
-          //             style: poppinsRegular, textAlign: TextAlign.center),
-          //       ),
-          //       CustomTextField(
-          //         hintText: '',
-          //         controller: _emailController,
-          //         inputType: TextInputType.text,
-          //         divider: false,
-          //       ),
-          // SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
-          // GetBuilder<AuthController>(builder: (authController) {
-          //   return !authController.isLoading
-          //       ? CustomButton(
-          //     radius: Dimensions.RADIUS_EXTRA_LARGE,
-          //     buttonText: 'next'.tr,
-          //     onPressed: () => _forgetPass(_emailController.text),
-          //   )
-          //       : Center(child: CircularProgressIndicator());
-          // }),
-          //]
-          // ),
-          //),)
-          // )
-          //
-          //
-          // ),,
-        ),
+    return Scaffold(
+      body: Container(
+        color: Color(0xFF2761E7),
+        child: pageRoute == 0
+            ? forgotPasswordUI()
+            : pageRoute == 1
+                ? verifyOtpUI(context)
+                : setPasswordUI(context),
+        // body: SafeArea(
+        //     child: Center(
+        //         child: Container(
+        //   width: context.width > 700 ? 700 : context.width,
+        //   padding: context.width > 700
+        //       ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT)
+        //       : null,
+        //   margin: EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
+        //   decoration: context.width > 700
+        //       ? BoxDecoration(
+        //           color: Theme.of(context).cardColor,
+        //           borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
+        //           boxShadow: [
+        //             BoxShadow(
+        //                 color: Colors.grey[Get.isDarkMode ? 700 : 300],
+        //                 blurRadius: 5,
+        //                 spreadRadius: 1)
+        //           ],
+        //         )
+        //       : null,
+        //   child: SingleChildScrollView(
+        //     child: Column(children: [
+        //       Image.asset(Images.forgot, height: 220),
+        //       Padding(
+        //         padding: EdgeInsets.all(30),
+        //         child: Text('please_enter_email_or_username'.tr,
+        //             style: poppinsRegular, textAlign: TextAlign.center),
+        //       ),
+        //       CustomTextField(
+        //         hintText: '',
+        //         controller: _emailController,
+        //         inputType: TextInputType.text,
+        //         divider: false,
+        //       ),
+        // SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+        // GetBuilder<AuthController>(builder: (authController) {
+        //   return !authController.isLoading
+        //       ? CustomButton(
+        //     radius: Dimensions.RADIUS_EXTRA_LARGE,
+        //     buttonText: 'next'.tr,
+        //     onPressed: () => _forgetPass(_emailController.text),
+        //   )
+        //       : Center(child: CircularProgressIndicator());
+        // }),
+        //]
+        // ),
+        //),)
+        // )
+        //
+        //
+        // ),,
       ),
     );
   }

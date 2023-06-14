@@ -31,40 +31,40 @@ class ProductModel {
   List<ProductVariation> variation;
   String status;
 
-  ProductModel(
-      {this.id,
-        this.name,
-        this.slug,
-        this.type,
-        this.description,
-        this.shortDescription,
-        this.sku,
-        this.price,
-        this.regularPrice,
-        this.salePrice,
-        this.dateOnSaleFrom,
-        this.dateOnSaleTo,
-        this.onSale,
-        this.taxStatus,
-        this.taxClass,
-        this.manageStock,
-        this.stockQuantity,
-        this.shippingClassId,
-        this.averageRating,
-        this.ratingCount,
-        this.categories,
-        this.images,
-        this.attributes,
-        this.variations,
-        this.relatedIds,
-        this.variationProducts,
-        this.variation,
-        this.status,
-      });
+  ProductModel({
+    this.id,
+    this.name,
+    this.slug,
+    this.type,
+    this.description,
+    this.shortDescription,
+    this.sku,
+    this.price,
+    this.regularPrice,
+    this.salePrice,
+    this.dateOnSaleFrom,
+    this.dateOnSaleTo,
+    this.onSale,
+    this.taxStatus,
+    this.taxClass,
+    this.manageStock,
+    this.stockQuantity,
+    this.shippingClassId,
+    this.averageRating,
+    this.ratingCount,
+    this.categories,
+    this.images,
+    this.attributes,
+    this.variations,
+    this.relatedIds,
+    this.variationProducts,
+    this.variation,
+    this.status,
+  });
 
   ProductModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    if(json['name'] != null) {
+    if (json['name'] != null) {
       name = (json['name']).replaceAll('amp;', '');
     }
     slug = json['slug'];
@@ -73,7 +73,9 @@ class ProductModel {
     shortDescription = json['short_description'];
     sku = json['sku'];
     price = json['price'];
-    regularPrice = json['regular_price'].isNotEmpty ? json['regular_price'] : json['price'];
+    regularPrice = json['regular_price'].isNotEmpty
+        ? json['regular_price']
+        : json['price'];
     salePrice = json['sale_price'];
     dateOnSaleFrom = json['date_on_sale_from'];
     dateOnSaleTo = json['date_on_sale_to'];
@@ -89,36 +91,37 @@ class ProductModel {
       averageRating = double.tryParse(json['average_rating'].toString());
     }
     ratingCount = json['rating_count'];
-    if(json['categories'] != null) {
+    if (json['categories'] != null) {
       categories = <Categories>[];
       json['categories'].forEach((v) {
         categories.add(new Categories.fromJson(v));
       });
     }
-    if(json['images'] != null) {
+    if (json['images'] != null) {
       images = <ImageModel>[];
       json['images'].forEach((v) {
         images.add(new ImageModel.fromJson(v));
       });
     }
-    if(json['attributes'] != null) {
+    if (json['attributes'] != null) {
       attributes = <Attributes>[];
       json['attributes'].forEach((v) {
         attributes.add(Attributes.fromJson(v));
       });
     }
     //variations = json['variations'] != null ? json['variations'].cast<int>() : null;
-    relatedIds = json['related_ids'] != null ? json['related_ids'].cast<int>() : null;
-    if(json['variation_products'] != null) {
+    relatedIds =
+        json['related_ids'] != null ? json['related_ids'].cast<int>() : null;
+    if (json['variation_products'] != null) {
       variationProducts = <VariationProducts>[];
       json['variation_products'].forEach((v) {
         variationProducts.add(new VariationProducts.fromJson(v));
       });
     }
-    if(json['variations'] != null) {
+    if (json['variations'] != null) {
       variation = <ProductVariation>[];
       json['variations'].forEach((v) {
-        if(v.runtimeType != int){
+        if (v.runtimeType != int) {
           variation.add(ProductVariation.fromJson(v));
         }
       });
@@ -162,7 +165,8 @@ class ProductModel {
     //data['variations'] = this.variations;
     data['related_ids'] = this.relatedIds;
     if (this.variationProducts != null) {
-      data['variation_products'] = this.variationProducts.map((v) => v.toJson()).toList();
+      data['variation_products'] =
+          this.variationProducts.map((v) => v.toJson()).toList();
     }
     if (this.attributes != null) {
       data['average_rating'] = this.attributes.map((v) => v.toJson()).toList();
@@ -251,15 +255,15 @@ class Attributes {
 
   Attributes(
       {
-        //this.id,
-        this.name,
-        this.position,
-        this.visible,
-        this.variation,
-        this.options});
+      //this.id,
+      this.name,
+      this.position,
+      this.visible,
+      this.variation,
+      this.options});
 
   Attributes.fromJson(Map<String, dynamic> json) {
-    if(json['name'] != null) {
+    if (json['name'] != null) {
       String _name = json['name'];
       List<String> _splitName;
       _splitName = _name.split('_');
@@ -268,12 +272,12 @@ class Attributes {
     position = json['position'];
     visible = json['visible'];
     variation = json['variation'];
-    if( json['options'] != null && json['options'] != []) {
+    if (json['options'] != null && json['options'] != []) {
       options = [];
       // print('==Options==');
       // print(json['options']);
       print(json['options'].length);
-      for (int i=0; i< json['options'].length; i++){
+      for (int i = 0; i < json['options'].length; i++) {
         options.add(json['options'][i].toString());
       }
     }
@@ -337,7 +341,6 @@ class Self {
   }
 }
 
-
 class Rating {
   String rating;
   int count;
@@ -357,14 +360,13 @@ class Rating {
   }
 }
 
-
 class ProductVariation {
   int id;
   List<VariationAttributes> attributes;
   VariationImage variationImage;
-  int price;
-  int regularPrice;
-  int salePrice;
+  num price;
+  num regularPrice;
+  num salePrice;
   String sku;
   int stockQuantity;
   String variation;
@@ -372,16 +374,15 @@ class ProductVariation {
 
   ProductVariation(
       {this.id,
-        this.attributes,
-        this.variationImage,
-        this.price,
-        this.regularPrice,
-        this.salePrice,
-        this.sku,
-        this.stockQuantity,
-        this.variation,
-        this.manageStock
-      });
+      this.attributes,
+      this.variationImage,
+      this.price,
+      this.regularPrice,
+      this.salePrice,
+      this.sku,
+      this.stockQuantity,
+      this.variation,
+      this.manageStock});
 
   ProductVariation.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -396,9 +397,9 @@ class ProductVariation {
         : null;
     price = json['price'];
     regularPrice = json['regular_price'];
-    if(json['sale_price'] != '') {
+    if (json['sale_price'] != '') {
       salePrice = json['sale_price'];
-    }else{
+    } else {
       salePrice = null;
     }
     sku = json['sku'];
@@ -406,10 +407,10 @@ class ProductVariation {
       stockQuantity = json['stock_quantity'];
     }
     variation = json['variation'];
-    if(json['manage_stock'] != null &&  json['manage_stock'] != '') {
-      if(json['manage_stock'] == 'parent'){
+    if (json['manage_stock'] != null && json['manage_stock'] != '') {
+      if (json['manage_stock'] == 'parent') {
         manageStock = false;
-      }else {
+      } else {
         manageStock = json['manage_stock'];
       }
     }
@@ -444,7 +445,7 @@ class VariationAttributes {
 
   VariationAttributes.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    if(json['name'] != null) {
+    if (json['name'] != null) {
       String _name = json['name'];
       List<String> _splitName;
       _splitName = _name.split('_');
@@ -470,7 +471,7 @@ class VariationImage {
 
   VariationImage.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    if( json['src'] != false) {
+    if (json['src'] != false) {
       src = json['src'];
     }
   }
@@ -482,7 +483,6 @@ class VariationImage {
     return data;
   }
 }
-
 
 class GroupedProduct {
   int id;
@@ -501,19 +501,18 @@ class GroupedProduct {
 
   GroupedProduct(
       {this.id,
-        this.name,
-        this.slug,
-        this.type,
-        this.status,
-        this.upsellIds,
-        this.images,
-        this.menuOrder,
-        this.priceHtml,
-        this.relatedIds,
-        this.stockStatus,
-        this.hasOptions,
-        this.groupedProducts
-      });
+      this.name,
+      this.slug,
+      this.type,
+      this.status,
+      this.upsellIds,
+      this.images,
+      this.menuOrder,
+      this.priceHtml,
+      this.relatedIds,
+      this.stockStatus,
+      this.hasOptions,
+      this.groupedProducts});
 
   GroupedProduct.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -533,7 +532,7 @@ class GroupedProduct {
     relatedIds = json['related_ids'].cast<int>();
     stockStatus = json['stock_status'];
     hasOptions = json['has_options'];
-    if(json['grouped_products'] != null){
+    if (json['grouped_products'] != null) {
       groupedProducts = json['grouped_products'].cast<int>();
     }
   }
@@ -571,13 +570,13 @@ class Imagep {
 
   Imagep(
       {this.id,
-        this.dateCreated,
-        this.dateCreatedGmt,
-        this.dateModified,
-        this.dateModifiedGmt,
-        this.src,
-        this.name,
-        this.alt});
+      this.dateCreated,
+      this.dateCreatedGmt,
+      this.dateModified,
+      this.dateModifiedGmt,
+      this.src,
+      this.name,
+      this.alt});
 
   Imagep.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -618,7 +617,7 @@ class WishedModel {
     if (json['product_list'] != null) {
       wishedProductList = <ProductModel>[];
       json['product_list'].forEach((v) {
-      wishedProductList.add(ProductModel.fromJson(v));
+        wishedProductList.add(ProductModel.fromJson(v));
       });
     }
   }
@@ -627,7 +626,8 @@ class WishedModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     if (this.wishedProductList != null) {
-      data['product_list'] = this.wishedProductList.map((v) => v.toJson()).toList();
+      data['product_list'] =
+          this.wishedProductList.map((v) => v.toJson()).toList();
     }
     return data;
   }

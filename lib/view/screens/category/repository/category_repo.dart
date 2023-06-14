@@ -8,7 +8,8 @@ class CategoryRepo {
   CategoryRepo({@required this.apiClient});
 
   Future<Response> getCategoryList(int offset) async {
-    return await apiClient.getData(AppConstants.CATEGORY_URI+offset.toString());
+    return await apiClient
+        .getData(AppConstants.CATEGORY_URI + offset.toString());
   }
 
   Future<Response> getSubCategoryList(String parentID) async {
@@ -16,13 +17,15 @@ class CategoryRepo {
   }
 
   Future<Response> getCategoryProductList(String categoryID, int offset) async {
-    return await apiClient.getData('${AppConstants.CATEGORY_PRODUCT_URI}$categoryID&per_page=${AppConstants.PAGINATION_LIMIT}&page=$offset');
+    print("CATEGORY ID====$categoryID");
+    return await apiClient.getData(
+        '${AppConstants.CATEGORY_PRODUCT_URI}$categoryID&per_page=${AppConstants.PAGINATION_LIMIT}&page=$offset');
   }
 
-  Future<Response> getSearchData(String query, String categoryID,int offset) async {
+  Future<Response> getSearchData(
+      String query, String categoryID, int offset) async {
     return await apiClient.getData(
       '${AppConstants.CATEGORY_PRODUCT_URI}$categoryID&search=$query&page=$offset&per_page=${AppConstants.PAGINATION_LIMIT}',
     );
   }
-
 }

@@ -1,21 +1,15 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_woocommerce/helper/route_helper.dart';
-import 'package:flutter_woocommerce/util/color_utils.dart';
 import 'package:flutter_woocommerce/util/images.dart';
 import 'package:flutter_woocommerce/view/base/custom_image.dart';
-import 'package:flutter_woocommerce/view/base/custom_sliver.dart';
 import 'package:flutter_woocommerce/view/base/paginated_list_view.dart';
-import 'package:flutter_woocommerce/view/base/product_view.dart';
 import 'package:flutter_woocommerce/view/screens/Shop/controller/shop_controller.dart';
 import 'package:flutter_woocommerce/view/screens/auth/controller/auth_controller.dart';
 import 'package:flutter_woocommerce/view/screens/category/controller/category_controller.dart';
-import 'package:flutter_woocommerce/view/screens/grouped_product/grouped_product_view.dart';
 import 'package:flutter_woocommerce/view/screens/home/controller/banner_controller.dart';
-import 'package:flutter_woocommerce/view/screens/home/widget/banner_view.dart';
+import 'package:flutter_woocommerce/view/screens/home/home_category_screen.dart';
+import 'package:flutter_woocommerce/view/screens/home/widget/poroduct_category_view.dart';
 import 'package:flutter_woocommerce/view/screens/home/widget/sale_product_view.dart';
 import 'package:flutter_woocommerce/view/screens/home/widget/search_widget.dart';
-import 'package:flutter_woocommerce/view/screens/home/widget/shop_view.dart';
 import 'package:flutter_woocommerce/view/screens/home/widget/top_rated_products.dart';
 import 'package:flutter_woocommerce/view/screens/product/controller/product_controller.dart';
 import 'package:flutter/material.dart';
@@ -23,20 +17,9 @@ import 'package:flutter_woocommerce/util/app_constants.dart';
 import 'package:flutter_woocommerce/util/dimensions.dart';
 import 'package:flutter_woocommerce/util/styles.dart';
 import 'package:flutter_woocommerce/view/screens/home/widget/category_view.dart';
-import 'package:flutter_woocommerce/view/screens/home/widget/popular_product_view.dart';
 import 'package:flutter_woocommerce/view/screens/profile/controller/profile_controller.dart';
-import 'package:flutter_woocommerce/view/screens/search/search_screen.dart';
 import 'package:flutter_woocommerce/view/screens/wish/controller/wish_controller.dart';
 import 'package:get/get.dart';
-
-final List<String> imgList = [
-  'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
-  'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
-  'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
-  'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
-  'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
-  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
-];
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -64,6 +47,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController _scrollController = ScrollController();
+  CategoryController categoryController = Get.find<CategoryController>();
   @override
   void initState() {
     super.initState();
@@ -95,51 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  final List<Widget> imageSliders = imgList
-      .map((item) => Padding(
-            padding: const EdgeInsets.all(0.0),
-            child: Container(
-              child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  child: Stack(
-                    children: <Widget>[
-                      Image.network(
-                        item,
-                        fit: BoxFit.cover,
-                      ),
-                      Positioned(
-                        bottom: 0.0,
-                        left: 0.0,
-                        right: 0.0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Color.fromARGB(200, 0, 0, 0),
-                                Color.fromARGB(0, 0, 0, 0)
-                              ],
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.topCenter,
-                            ),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 20.0),
-                          child: Text(
-                            'No. ${imgList.indexOf(item)} image',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
-            ),
-          ))
-      .toList();
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<BannerController>(builder: (bannerController) {
@@ -162,7 +101,8 @@ class _HomeScreenState extends State<HomeScreen> {
           }
         }
       });
-
+      print(
+          "bannerController.bannerList.length === ${bannerController.bannerList.length}");
       return Scaffold(
           body: RefreshIndicator(
         onRefresh: () async {
@@ -234,9 +174,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      ///Banner 1
                       (bannerController.bannerList.length != 0)
                           ? Container(
                               height: 170,
+                              width: Get.width,
                               padding: EdgeInsets.fromLTRB(
                                   Dimensions.PADDING_SIZE_DEFAULT,
                                   10,
@@ -260,17 +202,105 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                       SaleProductView(),
                       SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                      AppConstants.vendorType != VendorType.singleVendor
-                          ? ShopView()
+
+                      ///Banner 2
+                      (bannerController.bannerList.length > 1)
+                          ? Container(
+                              height: 170,
+                              width: Get.width,
+                              padding: EdgeInsets.fromLTRB(
+                                  Dimensions.PADDING_SIZE_DEFAULT,
+                                  10,
+                                  Dimensions.PADDING_SIZE_DEFAULT,
+                                  0),
+                              // child: BannerView(),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: CustomImage(
+                                  image:
+                                      '${bannerController.bannerList[1].image}',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )
                           : SizedBox(),
-                      GroupedProductView(),
+
+                      ///OLD Code Shop view
+                      // AppConstants.vendorType != VendorType.singleVendor
+                      //     ?
+                      // ShopView()
+                      //     : SizedBox(),
+                      // StaggeredGridView.countBuilder(
+                      //   physics: ClampingScrollPhysics(),
+                      //   crossAxisCount: 4,
+                      //   padding: EdgeInsets.zero,
+                      //   shrinkWrap: true,
+                      //   itemCount: 8,
+                      //   mainAxisSpacing: 10,
+                      //   crossAxisSpacing: 10,
+                      //   itemBuilder: (BuildContext context, int index) =>
+                      //       Container(
+                      //           height: 200,
+                      //           margin: index.isOdd
+                      //               ? EdgeInsets.only(top: 20)
+                      //               : null,
+                      //           color: Colors.green,
+                      //           child: new Center(
+                      //             child: new CircleAvatar(
+                      //               backgroundColor: Colors.white,
+                      //               child: new Text('$index'),
+                      //             ),
+                      //           )),
+                      //   staggeredTileBuilder: (int index) =>
+                      //       new StaggeredTile.fit(2),
+                      // ),
+                      // Text("HomeCategoryProductsView"),
+                      //
+                      // HomeCategoryProductsView(),
+                      // Text("HomeCategoryScreen"),
+                      // HomeCategoryScreen(
+                      //   categoryId: 548,
+                      // ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      GetBuilder<CategoryController>(
+                          builder: (categoryController) {
+                        return (categoryController.categoryList != null &&
+                                categoryController.categoryList.length != 0)
+                            ? HomeCategoryScreen(
+                                categoryList: categoryController.categoryList)
+                            : SizedBox();
+                      }),
+
+                      ///Banner 2
+                      (bannerController.bannerList.length > 2)
+                          ? Container(
+                              height: 170,
+                              width: Get.width,
+                              padding: EdgeInsets.fromLTRB(
+                                  Dimensions.PADDING_SIZE_DEFAULT,
+                                  10,
+                                  Dimensions.PADDING_SIZE_DEFAULT,
+                                  0),
+                              // child: BannerView(),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: CustomImage(
+                                  image:
+                                      '${bannerController.bannerList[2].image}',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
+                      // GroupedProductView(),
                       Padding(
                         padding: EdgeInsets.fromLTRB(10, 15, 0, 5),
                         child: Text(
                           'all_product'.tr,
                           style: poppinsMedium.copyWith(
-                              fontSize: Dimensions.fontSizeLarge,
-                              color: Theme.of(context).primaryColor),
+                              fontSize: 20, color: Colors.black),
                         ),
                       ),
                       GetBuilder<ProductController>(
@@ -282,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onPaginate: (int offset) async =>
                               await productController.getProductList(
                                   offset, false),
-                          itemView: ProductView(
+                          itemView: ProductCatView(
                               products: productController.productList,
                               isShop: false),
                         );

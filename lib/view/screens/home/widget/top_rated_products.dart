@@ -28,7 +28,6 @@ class _TopRatedProductState extends State<TopRatedProduct> {
     return GetBuilder<ProductController>(builder: (productController) {
       List<ProductModel> _productList = [];
       _productList = productController.reviewedProductList;
-
       return (_productList != null && _productList.isNotEmpty)
           ? Column(
               children: [
@@ -37,10 +36,9 @@ class _TopRatedProductState extends State<TopRatedProduct> {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('top_rated_product'.tr,
+                        Text('Most Loved',
                             style: poppinsMedium.copyWith(
-                                fontSize: Dimensions.fontSizeLarge,
-                                color: Theme.of(context).primaryColor)),
+                                fontSize: 20, color: Colors.black)),
 
                         // Row(
                         //   children: [
@@ -144,7 +142,7 @@ class _TopRatedProductState extends State<TopRatedProduct> {
                           ),
                           items: _productList
                               .map((item) => Padding(
-                                    padding: EdgeInsets.zero,
+                                    padding: EdgeInsets.symmetric(vertical: 10),
                                     child: Container(
                                       // width: 300,
                                       decoration: BoxDecoration(

@@ -17,64 +17,91 @@ class ProductView extends StatelessWidget {
   final bool isScrollable;
   final int shimmerLength;
   final String noDataText;
-  ProductView({@required this.products, this.isScrollable = false,
-    this.shimmerLength = 20, this.padding = const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL), this.noDataText, this.shops, this.isShop= false
-  });
+  ProductView(
+      {@required this.products,
+      this.isScrollable = false,
+      this.shimmerLength = 20,
+      this.padding = const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+      this.noDataText,
+      this.shops,
+      this.isShop = false});
 
   @override
   Widget build(BuildContext context) {
     bool _isNull = true;
     int _length = 0;
-    if(isShop) {
+    if (isShop) {
       _isNull = shops == null;
-      if(!_isNull) {
+      if (!_isNull) {
         _length = shops.length;
       }
-    }else {
+    } else {
       _isNull = products == null;
-      if(!_isNull) {
+      if (!_isNull) {
         _length = products.length;
       }
     }
 
-
-    return !_isNull ? _length > 0 ? GridView.builder(
-      key: UniqueKey(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisSpacing: 10,
-        mainAxisSpacing:  10,
-        childAspectRatio: isShop? .58 : Get.width< 400? .58 : .66,
-        crossAxisCount: isShop? 2 : 2,
-      ),
-      physics: isScrollable ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
-      shrinkWrap: isScrollable ? false : true,
-      itemCount: _length,
-      padding: padding,
-      itemBuilder: (context, index) {
-        return isShop ? AllShopCardWidget(shopModel: shops[index]) :
-        ProductCard(productModel: products[index], allProduct: true, index: index, productList: products);
-      },
-    ) : SizedBox(
-        height: Get.context.height-150,
-        width: Get.context.width,
-        child: NoDataScreen(text: noDataText != null ? noDataText : isShop ? 'no_shop_available'.tr : 'no_product_available'.tr, type: NoDataType.SEARCH)
-    ) :
-
-    GridView.builder(
-      key: UniqueKey(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisSpacing: Dimensions.PADDING_SIZE_LARGE,
-        mainAxisSpacing: ResponsiveHelper.isDesktop(context) ? Dimensions.PADDING_SIZE_LARGE : 0.05,
-        childAspectRatio: .58,
-        crossAxisCount: 2,
-      ),
-      physics: isScrollable ? BouncingScrollPhysics() : NeverScrollableScrollPhysics(),
-      shrinkWrap: isScrollable ? false : true,
-      itemCount: shimmerLength,
-      padding: padding,
-      itemBuilder: (context, index) {
-        return ProductShimmer(isEnabled: _isNull, hasDivider: index != shimmerLength-1);
-      },
-    );
+    return !_isNull
+        ? _length > 0
+            ? GridView.builder(
+                key: UniqueKey(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: isShop
+                      ? .58
+                      : Get.width < 400
+                          ? .58
+                          : .66,
+                  crossAxisCount: isShop ? 2 : 2,
+                ),
+                physics: isScrollable
+                    ? BouncingScrollPhysics()
+                    : NeverScrollableScrollPhysics(),
+                shrinkWrap: isScrollable ? false : true,
+                itemCount: _length,
+                padding: padding,
+                itemBuilder: (context, index) {
+                  return isShop
+                      ? AllShopCardWidget(shopModel: shops[index])
+                      : ProductCard(
+                          productModel: products[index],
+                          allProduct: true,
+                          index: index,
+                          productList: products);
+                },
+              )
+            : SizedBox(
+                height: Get.context.height - 150,
+                width: Get.context.width,
+                child: NoDataScreen(
+                    text: noDataText != null
+                        ? noDataText
+                        : isShop
+                            ? 'no_shop_available'.tr
+                            : 'no_product_available'.tr,
+                    type: NoDataType.SEARCH))
+        : GridView.builder(
+            key: UniqueKey(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisSpacing: Dimensions.PADDING_SIZE_LARGE,
+              mainAxisSpacing: ResponsiveHelper.isDesktop(context)
+                  ? Dimensions.PADDING_SIZE_LARGE
+                  : 0.05,
+              childAspectRatio: .58,
+              crossAxisCount: 2,
+            ),
+            physics: isScrollable
+                ? BouncingScrollPhysics()
+                : NeverScrollableScrollPhysics(),
+            shrinkWrap: isScrollable ? false : true,
+            itemCount: shimmerLength,
+            padding: padding,
+            itemBuilder: (context, index) {
+              return ProductShimmer(
+                  isEnabled: _isNull, hasDivider: index != shimmerLength - 1);
+            },
+          );
   }
 }

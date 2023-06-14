@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 ThemeData light = ThemeData(
   fontFamily: 'Roboto',
-  primaryColor: Color(0xFF473DA4),
+  //primaryColor: Color(0xFF473DA4),
+  primaryColor: Color(0xFF2761E7),
   // primaryColor: Color(0xFF6656FB),
-  primaryColorDark: Color(0xFF223263),
+  //primaryColorDark: Color(0xFF223263),
+  primaryColorDark: Color(0xFF2761E7),
   secondaryHeaderColor: Color(0xFF1ED7AA),
   primaryColorLight: Color(0xFFC0BAFB),
   disabledColor: Color(0xFFBABFC4),
@@ -23,9 +25,10 @@ ThemeData light = ThemeData(
     surfaceTint: Color(0xFFECEAFF),
     surfaceVariant: Color(0xFFFFFFFF),
   ),
-  textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: Color(0xFF473DA4))),
+  textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(foregroundColor: Color(0xFF473DA4))),
   textTheme: TextTheme(
-    displayMedium: TextStyle(fontWeight: FontWeight.w300, color: Color(0xFF4F5663)),
-    labelSmall: TextStyle(color: Color(0xFF9098B1))
-  ),
+      displayMedium:
+          TextStyle(fontWeight: FontWeight.w300, color: Color(0xFF4F5663)),
+      labelSmall: TextStyle(color: Color(0xFF9098B1))),
 );
